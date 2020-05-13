@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">quizapp</string>
+    <string name="edit_text_category">Category</string>
+    <string name="edit_text_quantity">Quantity</string>
+    <string name="button_start">Start</string>
+    <string name="button_next">Next</string>
 </resources>
