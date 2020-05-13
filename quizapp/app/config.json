@@ -1,0 +1,4 @@
+{
+  "modelPackage": "pl.edu.agh.toik.quizapp.model",
+  "apiPackage": "pl.edu.agh.toik.quizapp.api"
+}
