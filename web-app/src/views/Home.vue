@@ -1,6 +1,12 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
+  <div>
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <figure class="image center">
+          <img id="logo" alt="Vue logo" src="../assets/logo.png">
+        </figure>
+      </div>
+    </section>
     <HelloWorld msg="Welcome to Your Vue.js App"/>
   </div>
 </template>
@@ -16,3 +22,15 @@ export default {
   }
 }
 </script>
+
+<style>
+  #logo {
+    max-width: 128px;
+  }
+
+  .center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
