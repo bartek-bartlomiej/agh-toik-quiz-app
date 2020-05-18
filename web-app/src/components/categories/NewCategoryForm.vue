@@ -1,5 +1,5 @@
 <template>
-  <form action="">
+  <form @submit.prevent="handleSubmit">
     <div class="modal-card" style="width: auto">
       <header class="modal-card-head">
         <p class="modal-card-title">New category</p>
@@ -8,13 +8,14 @@
         <b-field label="Name">
           <b-input
             type="text"
+            v-model="name"
             placeholder="Unique name category"
             required>
           </b-input>
         </b-field>
       </section>
       <footer class="modal-card-foot">
-        <b-button type="is-primary">Add category</b-button>
+        <b-button type="is-primary" native-type="submit">Add category</b-button>
         <b-button @click="$parent.close()">Cancel</b-button>
       </footer>
     </div>
@@ -23,6 +24,16 @@
 
 <script>
 export default {
-  name: 'new-category-form'
+  name: 'new-category-form',
+  data: function () {
+    return {
+      name: ''
+    }
+  },
+  methods: {
+    handleSubmit () {
+      console.log('connect with backend to create category with name', this.name)
+    }
+  }
 }
 </script>
