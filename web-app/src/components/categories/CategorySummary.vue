@@ -1,5 +1,5 @@
 <template>
-  <div class="column is-one-third">
+  <div class="column is-half-tablet is-one-third-desktop">
     <div class="notification">
       <div class="media center">
         <div class="media-content">
