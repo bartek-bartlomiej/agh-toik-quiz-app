@@ -1,6 +1,11 @@
 <template>
   <div class="column is-half-tablet is-one-third-desktop">
-    <div class="notification">
+    <div
+      class="notification"
+      :class="{ 'is-primary': hover, clickable: hover }"
+      @mouseover="hover = true"
+      @mouseleave="hover = false"
+    >
       <div class="media center">
         <div class="media-content">
           <div class="content">
@@ -26,6 +31,11 @@
 
 <script>
 export default {
-  name: 'category-summary'
+  name: 'category-summary',
+  data: function () {
+    return {
+      hover: false
+    }
+  }
 }
 </script>
