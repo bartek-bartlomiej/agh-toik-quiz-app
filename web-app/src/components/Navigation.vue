@@ -18,7 +18,7 @@
       </template>
 
       <template slot="end">
-        <b-navbar-item tag="router-link" :to="{ path: '/About'}" >
+        <b-navbar-item tag="router-link" :to="{ path: '/categories'}" >
           <span class="icon">
             <b-icon pack="fa" icon="edit" size="is-small" />
           </span>
