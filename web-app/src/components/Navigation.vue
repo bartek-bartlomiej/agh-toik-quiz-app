@@ -7,7 +7,7 @@
     >
       <template slot="brand">
         <b-navbar-item tag="router-link" :to="{ path: '/' }">
-          <img src="favicon.ico" alt="Quiz! Logo">
+          <img src="../assets/logo.svg" alt="Quiz! Logo">
         </b-navbar-item>
       </template>
 

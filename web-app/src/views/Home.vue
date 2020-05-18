@@ -1,9 +1,9 @@
 <template>
   <div>
-    <section class="hero is-primary">
+    <section class="hero is-medium is-white is-bold">
       <div class="hero-body">
         <figure class="image center">
-          <img id="logo" alt="Vue logo" src="../assets/logo.png">
+          <img id="logo" src="../assets/logo.svg" alt="Quiz! logo">
         </figure>
       </div>
     </section>
@@ -25,12 +25,6 @@ export default {
 
 <style>
   #logo {
-    max-width: 128px;
-  }
-
-  .center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    max-width: 520px;
   }
 </style>
