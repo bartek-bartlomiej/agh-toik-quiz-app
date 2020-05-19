@@ -11,6 +11,7 @@
     "@fortawesome/fontawesome-free": "^5.13.0",
     "buefy": "^0.8.19",
     "core-js": "^3.6.4",
+    "openapi-client-axios": "^3.4.1",
     "vue": "^2.6.11",
     "vue-router": "^3.1.6"
   },
@@ -27,7 +28,8 @@
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^6.2.2",
     "lint-staged": "^9.5.0",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.11",
+    "yaml-loader": "^0.6.0"
   },
   "eslintConfig": {
     "root": true,
