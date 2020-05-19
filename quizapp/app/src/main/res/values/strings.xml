@@ -4,4 +4,8 @@
     <string name="edit_text_quantity">Quantity</string>
     <string name="button_start">Start</string>
     <string name="button_next">Next</string>
+    <string name="button_again">Again</string>
+    <string name="text_view_statistics">Statistics</string>
+    <string name="text_view_positive_answers">Positive answers</string>
+    <string name="text_view_negative_answers">Negative answers</string>
 </resources>
