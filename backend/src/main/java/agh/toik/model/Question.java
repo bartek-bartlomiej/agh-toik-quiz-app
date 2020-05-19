@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 
@@ -13,8 +16,10 @@ import javax.validation.Valid;
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-05-19T18:19:31.581Z[GMT]")
+@Document
 public class Question   {
   @JsonProperty("id")
+  @Id
   private Long id = null;
 
   @JsonProperty("category")
@@ -32,6 +37,9 @@ public class Question   {
   @JsonProperty("answers")
   @Valid
   private List<String> answers = null;
+
+  public Question() {
+  }
 
   public Question id(Long id) {
     this.id = id;

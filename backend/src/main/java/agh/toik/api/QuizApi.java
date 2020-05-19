@@ -28,7 +28,7 @@ public interface QuizApi {
         produces = { "application/json" }, 
         method = RequestMethod.GET)
     ResponseEntity<List<Question>> getQuizQuestions(@ApiParam(value = "How much Questions do you want", defaultValue = "5") @Valid @RequestParam(value = "quantity", required = false, defaultValue="5") Integer quantity
-,@ApiParam(value = "How difficult Questions should be") @Valid @RequestParam(value = "difficulty", required = false) Difficulty difficulty
+,@ApiParam(value = "How difficult Questions should be") @Valid @RequestParam(value = "difficulty", required = false) String difficulty
 ,@ApiParam(value = "Question category") @Valid @RequestParam(value = "category", required = false) String category
 );
 

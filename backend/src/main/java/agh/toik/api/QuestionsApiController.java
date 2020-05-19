@@ -1,6 +1,8 @@
 package agh.toik.api;
 
 import agh.toik.model.Question;
+import agh.toik.repo.QuestionRepo;
+import agh.toik.utils.Helper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -24,40 +26,31 @@ public class QuestionsApiController implements QuestionsApi {
 
     private final HttpServletRequest request;
 
+    private QuestionRepo questionRepo;
+
     @org.springframework.beans.factory.annotation.Autowired
-    public QuestionsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
+    public QuestionsApiController(ObjectMapper objectMapper, HttpServletRequest request, QuestionRepo questionRepo) {
         this.objectMapper = objectMapper;
         this.request = request;
+        this.questionRepo = questionRepo;
     }
 
-    public ResponseEntity<Question> addQuestion(@ApiParam(value = "Question object that needs to be added to the db" ,required=true )  @Valid @RequestBody Question body
+    public ResponseEntity<Question> addQuestion(@ApiParam(value = "Question object that needs to be added to the db" ,required=true )  @Valid @RequestBody Question entity
 ) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<Question>(objectMapper.readValue("{\n  \"difficulty\" : \"difficulty\",\n  \"answers\" : [ \"answers\", \"answers\" ],\n  \"id\" : 0,\n  \"category\" : \"category\",\n  \"body\" : \"body\",\n  \"correctAnswer\" : 6\n}", Question.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<Question>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
-
-        return new ResponseEntity<Question>(HttpStatus.NOT_IMPLEMENTED);
+        entity.setId(Helper.generateID());
+        questionRepo.save(entity);
+        return ResponseEntity.ok(entity);
     }
 
-    public ResponseEntity<Question> updateQuestion(@ApiParam(value = "Question object that needs to be updated to the db" ,required=true )  @Valid @RequestBody Question body
+    public ResponseEntity<Question> updateQuestion(@ApiParam(value = "Question object that needs to be updated to the db" ,required=true )  @Valid @RequestBody Question entity
 ) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<Question>(objectMapper.readValue("{\n  \"difficulty\" : \"difficulty\",\n  \"answers\" : [ \"answers\", \"answers\" ],\n  \"id\" : 0,\n  \"category\" : \"category\",\n  \"body\" : \"body\",\n  \"correctAnswer\" : 6\n}", Question.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<Question>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+        Question questionToUpdate = questionRepo.findOne(entity.getId());
+        if (questionToUpdate == null) {
+            return new ResponseEntity<Question>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<Question>(HttpStatus.NOT_IMPLEMENTED);
+        questionRepo.save(entity); //save updates object that has _id value
+        return ResponseEntity.ok(entity);
     }
 
 }

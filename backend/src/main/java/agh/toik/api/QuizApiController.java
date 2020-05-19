@@ -2,10 +2,13 @@ package agh.toik.api;
 
 import agh.toik.model.Difficulty;
 import agh.toik.model.Question;
+import agh.toik.repo.QuestionRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,27 +29,27 @@ public class QuizApiController implements QuizApi {
 
     private final HttpServletRequest request;
 
+    private QuestionRepo questionRepo;
+
     @org.springframework.beans.factory.annotation.Autowired
-    public QuizApiController(ObjectMapper objectMapper, HttpServletRequest request) {
+    public QuizApiController(ObjectMapper objectMapper, HttpServletRequest request, QuestionRepo questionRepo) {
         this.objectMapper = objectMapper;
         this.request = request;
+        this.questionRepo = questionRepo;
     }
 
     public ResponseEntity<List<Question>> getQuizQuestions(@ApiParam(value = "How much Questions do you want", defaultValue = "5") @Valid @RequestParam(value = "quantity", required = false, defaultValue="5") Integer quantity
-, @ApiParam(value = "How difficult Questions should be") @Valid @RequestParam(value = "difficulty", required = false) Difficulty difficulty
+, @ApiParam(value = "How difficult Questions should be") @Valid @RequestParam(value = "difficulty", required = false) String difficulty
 , @ApiParam(value = "Question category") @Valid @RequestParam(value = "category", required = false) String category
 ) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<List<Question>>(objectMapper.readValue("[ {\n  \"difficulty\" : \"difficulty\",\n  \"answers\" : [ \"answers\", \"answers\" ],\n  \"id\" : 0,\n  \"category\" : \"category\",\n  \"body\" : \"body\",\n  \"correctAnswer\" : 6\n}, {\n  \"difficulty\" : \"difficulty\",\n  \"answers\" : [ \"answers\", \"answers\" ],\n  \"id\" : 0,\n  \"category\" : \"category\",\n  \"body\" : \"body\",\n  \"correctAnswer\" : 6\n} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<List<Question>>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
+        //TODO: validate parameters
 
-        return new ResponseEntity<List<Question>>(HttpStatus.NOT_IMPLEMENTED);
+        Query query = new Query();
+        query.addCriteria(Criteria.where("difficulty").is(difficulty));
+        List<Question> questions = questionRepo.findQuestionsByDifficultyAndCategory(difficulty, category);
+        //TODO: shuffle questions
+        questions = questions.subList(0, Math.min(questions.size(), quantity));
+        return ResponseEntity.ok(questions);
     }
 
 }

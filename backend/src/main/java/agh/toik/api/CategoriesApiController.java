@@ -1,5 +1,8 @@
 package agh.toik.api;
 
+import agh.toik.model.Category;
+import agh.toik.repo.CategoryRepo;
+import agh.toik.utils.Helper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -12,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-05-19T18:19:31.581Z[GMT]")
 @Controller
@@ -24,39 +29,32 @@ public class CategoriesApiController implements CategoriesApi {
 
     private final HttpServletRequest request;
 
+    private CategoryRepo categoryRepo;
+
     @org.springframework.beans.factory.annotation.Autowired
-    public CategoriesApiController(ObjectMapper objectMapper, HttpServletRequest request) {
+    public CategoriesApiController(ObjectMapper objectMapper, HttpServletRequest request, CategoryRepo categoryRepo) {
         this.objectMapper = objectMapper;
         this.request = request;
+        this.categoryRepo = categoryRepo;
     }
 
-    public ResponseEntity<String> addCategory(@ApiParam(value = "Category that needs to be added to the db" ,required=true )  @Valid @RequestBody String body
+    public ResponseEntity<String> addCategory(@ApiParam(value = "Category that needs to be added to the db" ,required=true )  @Valid @RequestBody String name
 ) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<String>(objectMapper.readValue("\"\"", String.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
-
-        return new ResponseEntity<String>(HttpStatus.NOT_IMPLEMENTED);
+        Category category = new Category();
+        category.setId(Helper.generateID());
+        category.setName(name);
+        categoryRepo.save(category);
+        return ResponseEntity.ok(name);
     }
 
     public ResponseEntity<List<String>> getCategories() {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<List<String>>(objectMapper.readValue("[ \"\", \"\" ]", List.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<List<String>>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
+        List<Category> categories = categoryRepo.findAll();
+        List<String> names = new ArrayList<>();
 
-        return new ResponseEntity<List<String>>(HttpStatus.NOT_IMPLEMENTED);
+        for (Category c : categories) {
+            names.add(c.getName());
+        }
+        return ResponseEntity.ok(names);
     }
 
 }
