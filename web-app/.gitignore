@@ -11,4 +11,4 @@ npm-debug.log*
 .idea
 *.iml
 
-src/css/debug.css
+src/assets/css/debug.css
