@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <div class="modal-card" style="width: auto">
+    <div class="modal-card">
       <header class="modal-card-head">
         <p class="modal-card-title">New category</p>
       </header>
@@ -10,6 +10,7 @@
             type="text"
             v-model="name"
             placeholder="Unique name category"
+            validation-message="Name cannot be empty"
             required>
           </b-input>
         </b-field>
@@ -23,6 +24,8 @@
 </template>
 
 <script>
+import client from '../../api'
+
 export default {
   name: 'new-category-form',
   data: function () {
@@ -32,7 +35,40 @@ export default {
   },
   methods: {
     handleSubmit () {
-      console.log('connect with backend to create category with name', this.name)
+      client.addCategory({ name: this.name })
+        .then(response => {
+          console.log(response.data)
+
+          this.showToast('success')
+          this.$emit('category-added', response.data)
+          this.$parent.close()
+        })
+        .catch(error => {
+          console.error('Adding category failed: ' + error.toString())
+
+          this.showToast('error')
+        })
+        // DEBUG
+        .finally(() => {
+          this.$emit('category-added', this.name)
+          this.$parent.close()
+        })
+    },
+    showToast (type) {
+      const messages = {
+        success: 'Category added successfully',
+        error: 'Could not add category. Please, try again.'
+      }
+      const types = {
+        success: 'is-success',
+        error: 'is-warning'
+      }
+      this.$buefy.toast.open({
+        duration: 3000,
+        message: messages[type],
+        position: 'is-bottom',
+        type: types[type]
+      })
     }
   }
 }

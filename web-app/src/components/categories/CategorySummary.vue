@@ -10,9 +10,9 @@
         <div class="media-content">
           <div class="content">
             <p>
-              <span class="title is-5">Some category</span>
+              <span class="title is-5">{{ name }}</span>
               <br>
-              <span class="subtitle is-7">15 questions</span>
+              <span class="subtitle is-7">{{ questionsQuantity }}</span>
             </p>
           </div>
         </div>
@@ -32,9 +32,18 @@
 <script>
 export default {
   name: 'category-summary',
+  props: {
+    name: String,
+    quantity: Number
+  },
   data: function () {
     return {
       hover: false
+    }
+  },
+  computed: {
+    questionsQuantity () {
+      return `${this.quantity} question${this.quantity !== 1 ? 's' : ''}`
     }
   }
 }

@@ -16,29 +16,92 @@
               trap-focus
               destroy-on-hide
             >
-              <new-category-form/>
+              <new-category-form @category-added="handleCategoryAdded"/>
             </b-modal>
           </div>
         </div>
       </nav>
       <div class="columns is-multiline">
-        <category-summary v-for="i in 3" v-bind:key="i"/>
+        <template v-if="loading">
+          <category-summary-skeleton
+            v-for="index in 4"
+            :key="index" />
+        </template>
+        <template v-else>
+          <category-summary
+            v-for="(summary, index) in sortedSummaries"
+            v-bind="summary"
+            :key="index" />
+        </template>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import CategorySummary from '../components/categories/CategorySummary'
+import client from '../api'
 import NewCategoryForm from '../components/categories/NewCategoryForm'
+import CategorySummary from '../components/categories/CategorySummary'
+import CategorySummarySkeleton from '../components/categories/CategorySummarySkeleton'
 
 export default {
   name: 'Categories',
-  components: { NewCategoryForm, CategorySummary },
+  components: { CategorySummarySkeleton, NewCategoryForm, CategorySummary },
   data: function () {
     return {
-      isNewCategoryModalVisible: false
+      isNewCategoryModalVisible: false,
+      loading: true,
+      categorySummaries: []
     }
+  },
+  computed: {
+    sortedSummaries () {
+      return [...this.categorySummaries]
+        .sort((one, other) => one.name.localeCompare(other.name))
+    }
+  },
+  methods: {
+    loadCategories () {
+      this.loading = true
+      client.getCategories()
+        .then(response => {
+          this.categorySummaries = response.data
+            .map(name => ({
+              name,
+              quantity: NaN
+            }))
+          this.loading = false
+        })
+        .catch(error => {
+          console.error('Could not get categories: ' + error.toString())
+          this.$buefy.toast.open({
+            duration: 3000,
+            message: 'Could not display categories. Will try again in 5 seconds.',
+            position: 'is-bottom',
+            type: 'is-warning'
+          })
+          // DEBUG
+          // setTimeout(() => this.loadCategories(), 5000)
+        })
+        // DEBUG
+        .finally(() => {
+          this.categorySummaries = ['r', 'c', 'w', 'e', 'y']
+            .map(name => ({
+              name,
+              quantity: NaN
+            }))
+          this.loading = false
+        })
+    },
+    handleCategoryAdded (name) {
+      this.categorySummaries.push({
+        name,
+        quantity: 0
+      })
+    }
+  },
+  mounted () {
+    this.loadCategories()
   }
 }
 </script>
