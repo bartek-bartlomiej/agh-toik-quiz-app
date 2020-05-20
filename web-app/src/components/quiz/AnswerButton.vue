@@ -21,8 +21,14 @@ export default {
   props: {
     text: String,
     index: Number,
+    questionId: Number,
     isQuestionAnswered: Boolean,
     isCorrectAnswer: Boolean
+  },
+  watch: {
+    questionId () {
+      this.selected = false
+    }
   },
   methods: {
     select () {

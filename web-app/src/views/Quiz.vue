@@ -14,6 +14,7 @@
               <template v-for="(answer, index) in currentQuestion.answers">
                 <answer-button
                   :index="index"
+                  :question-id="currentQuestion.id"
                   :is-correct-answer="index === currentQuestion.correctAnswer"
                   :is-question-answered="isCurrentQuestionAnswered"
                   :key="index"
@@ -27,6 +28,7 @@
                 <div class="level-item">
                   <b-button
                     :disabled="!isCurrentQuestionAnswered"
+                    @click="progress"
                     type="is-primary">
                     Next
                   </b-button>
@@ -52,10 +54,26 @@ export default {
         {
           answers: ['Thanos', 'Shaggy', 'Superman', 'Saitama'],
           body: 'Who is the most powerful hero in the world?',
-          category: 'movies',
+          category: 'Memes',
           correctAnswer: 1,
           difficulty: 'hard',
           id: 0
+        },
+        {
+          answers: ['X', '22', '?', '4'],
+          body: '2+2=?',
+          category: 'Arithmetic',
+          correctAnswer: 3,
+          difficulty: 'easy',
+          id: 1
+        },
+        {
+          answers: ['Gray wolf', 'Fox', 'Bear', 'Owl'],
+          body: 'What animal was the Sheriff of Nottingham in Disney’s Robin Hood?',
+          category: 'Movies',
+          correctAnswer: 0,
+          difficulty: 'hard',
+          id: 2
         }
       ],
       answers: [],
@@ -73,6 +91,9 @@ export default {
   methods: {
     saveAnswer (answerIndex) {
       this.answers.push(answerIndex)
+    },
+    progress () {
+      this.currentQuestionIndex += 1
     }
   }
 }
