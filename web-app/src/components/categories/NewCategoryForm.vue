@@ -35,7 +35,8 @@ export default {
   },
   methods: {
     handleSubmit () {
-      client.addCategory({ name: this.name })
+      // have to add Content-Type header manually due to OpenApi-client-axios behaviour
+      client.addCategory(null, this.name, { headers: { 'Content-Type': 'application/json' } })
         .then(response => {
           console.log(response.data)
 
@@ -47,11 +48,6 @@ export default {
           console.error('Adding category failed: ' + error.toString())
 
           this.showToast('error')
-        })
-        // DEBUG
-        .finally(() => {
-          this.$emit('category-added', this.name)
-          this.$parent.close()
         })
     },
     showToast (type) {

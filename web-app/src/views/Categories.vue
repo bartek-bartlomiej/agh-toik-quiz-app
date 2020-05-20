@@ -80,17 +80,7 @@ export default {
             position: 'is-bottom',
             type: 'is-warning'
           })
-          // DEBUG
-          // setTimeout(() => this.loadCategories(), 5000)
-        })
-        // DEBUG
-        .finally(() => {
-          this.categorySummaries = ['r', 'c', 'w', 'e', 'y']
-            .map(name => ({
-              name,
-              quantity: NaN
-            }))
-          this.loading = false
+          setTimeout(() => this.loadCategories(), 5000)
         })
     },
     handleCategoryAdded (name) {
