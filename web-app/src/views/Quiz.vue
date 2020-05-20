@@ -9,9 +9,10 @@
             :questions-quantity="questionsQuantity"
             @progress-requested="progress"
             @answer-given="saveAnswer"/>
-          <div v-else>
-            End!
-          </div>
+          <quiz-summary
+            :correct-answers-quantity="correctAnswersQuantity"
+            :questions-quantity="questionsQuantity"
+            v-else />
         </div>
       </div>
     </div>
@@ -19,11 +20,12 @@
 </template>
 
 <script>
-import question from '../components/quiz/Question'
+import Question from '../components/quiz/Question'
+import QuizSummary from '../components/quiz/QuizSummary'
 
 export default {
   name: 'Quiz',
-  components: { question },
+  components: { QuizSummary, Question },
   data: function () {
     return {
       questions: [
@@ -68,6 +70,11 @@ export default {
     },
     currentQuestionOrdinal () {
       return this.currentQuestionIndex + 1
+    },
+    correctAnswersQuantity () {
+      return this.answers.reduce((quantity, answerIndex, index) => {
+        return quantity + (answerIndex === this.questions[index].correctAnswer ? 1 : 0)
+      }, 0)
     },
     questionsQuantity () {
       return this.questions.length
