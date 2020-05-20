@@ -1,0 +1,33 @@
+version: '3'
+services:
+  toik-mongo:
+    container_name: "toik-mongo"
+    image: mongo:4.0.6
+    ports:
+      - "27017:27017"
+    networks:
+      - toik-net
+  toik-back:
+    container_name: "toik-back"
+    image: openjdk:8-jre-alpine
+    volumes:
+      - ./backend/target/agh-toik-quiz-server-1.0.1.jar:/app.jar
+    ports:
+      - "8080:8080"
+    command: "java -jar -Xms512M -Xmx2048M /app.jar"
+    depends_on:
+      - toik-mongo
+    networks:
+      - toik-net
+  # toik-front:
+  #   container_name: "toik-front"
+  #   image: httpd:2.4
+  #   volumes:
+  #     - ./frontend/dist/:/usr/local/apache2/htdocs/
+  #     - ./custom-httpd.conf:/usr/local/apache2/conf/httpd.conf
+  #   ports:
+  #     - "x:x"
+  #   networks:
+  #     - toik-net
+networks:
+  toik-net:
