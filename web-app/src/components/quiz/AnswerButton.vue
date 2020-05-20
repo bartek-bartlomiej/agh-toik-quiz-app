@@ -1,7 +1,7 @@
 <template>
   <b-button
     :class="{ 'is-inactive': isQuestionAnswered }"
-    :outlined="!isQuestionAnswered ? true : !selected"
+    :outlined="!selected"
     :type="!isQuestionAnswered ? 'is-primary' : (isCorrectAnswer ? 'is-success' : (selected ? 'is-danger' : 'is-light'))"
     @click="select"
     expanded
@@ -13,34 +13,34 @@
 <script>
 export default {
   name: 'answer-button',
+  props: {
+    text: String,
+    index: Number,
+    questionOrdinal: Number,
+    isQuestionAnswered: Boolean,
+    isCorrectAnswer: Boolean
+  },
   data: function () {
     return {
       selected: false
     }
   },
-  props: {
-    text: String,
-    index: Number,
-    questionId: Number,
-    isQuestionAnswered: Boolean,
-    isCorrectAnswer: Boolean
-  },
   watch: {
-    questionId () {
+    questionOrdinal () {
       this.selected = false
     }
   },
   methods: {
     select () {
       this.$el.blur()
-      this.$emit('answer-selected', this.index)
       this.selected = true
+      this.$emit('answer-selected', this.index)
     }
   }
 }
 </script>
 
-<style>
+<style scoped>
   .is-inactive {
     pointer-events: none;
   }

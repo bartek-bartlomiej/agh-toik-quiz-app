@@ -3,39 +3,15 @@
     <div class="container is-widescreen">
       <div class="columns is-centered">
         <div class="column is-two-thirds-tablet is-half-desktop">
-          <nav class="level">
-            <div class="level-item">
-              <h1 class="title is-4 is-spaced">Question {{ currentQuestionIndex + 1 }} ouf of {{ questions.length }}</h1>
-            </div>
-          </nav>
-          <section class="section">
-            <h2 class="subtitle has-text-centered">{{ currentQuestion.body }}</h2>
-            <div class="buttons">
-              <template v-for="(answer, index) in currentQuestion.answers">
-                <answer-button
-                  :index="index"
-                  :question-id="currentQuestion.id"
-                  :is-correct-answer="index === currentQuestion.correctAnswer"
-                  :is-question-answered="isCurrentQuestionAnswered"
-                  :key="index"
-                  :text="answer"
-                  @answer-selected="saveAnswer"/>
-              </template>
-            </div>
-            <nav class="level">
-              <div class="level-left"/>
-              <div class="level-right">
-                <div class="level-item">
-                  <b-button
-                    :disabled="!isCurrentQuestionAnswered"
-                    @click="progress"
-                    type="is-primary">
-                    Next
-                  </b-button>
-                </div>
-              </div>
-            </nav>
-          </section>
+          <question
+            v-if="isInProgress"
+            :question-data="currentQuestionData"
+            :questions-quantity="questionsQuantity"
+            @progress-requested="progress"
+            @answer-given="saveAnswer"/>
+          <div v-else>
+            End!
+          </div>
         </div>
       </div>
     </div>
@@ -43,11 +19,11 @@
 </template>
 
 <script>
-import AnswerButton from '../components/quiz/AnswerButton'
+import question from '../components/quiz/Question'
 
 export default {
   name: 'Quiz',
-  components: { AnswerButton },
+  components: { question },
   data: function () {
     return {
       questions: [
@@ -81,16 +57,28 @@ export default {
     }
   },
   computed: {
-    currentQuestion () {
-      return this.questions[this.currentQuestionIndex]
+    currentQuestionData () {
+      const currentQuestion = this.questions[this.currentQuestionIndex]
+      return {
+        ordinal: this.currentQuestionOrdinal,
+        body: currentQuestion.body,
+        correctAnswer: currentQuestion.correctAnswer,
+        answers: currentQuestion.answers
+      }
     },
-    isCurrentQuestionAnswered () {
-      return this.answers.length === this.currentQuestionIndex + 1
+    currentQuestionOrdinal () {
+      return this.currentQuestionIndex + 1
+    },
+    questionsQuantity () {
+      return this.questions.length
+    },
+    isInProgress () {
+      return this.currentQuestionIndex < this.questionsQuantity
     }
   },
   methods: {
-    saveAnswer (answerIndex) {
-      this.answers.push(answerIndex)
+    saveAnswer (givenAnswer) {
+      this.answers.push(givenAnswer)
     },
     progress () {
       this.currentQuestionIndex += 1
