@@ -15,7 +15,7 @@
     </section>
     <div class="buttons is-centered">
       <b-button type="is-primary" size="is-large">Start Quiz!</b-button>
-      <b-button type="is-white">Manage questions</b-button>
+      <b-button type="is-white" tag="router-link" :to="{ name: 'Categories' }">Manage questions</b-button>
     </div>
   </form>
 </template>

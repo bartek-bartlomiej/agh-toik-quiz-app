@@ -16,7 +16,7 @@
     </section>
     <nav class="level">
         <div class="level-item">
-          <b-button type="is-primary">
+          <b-button type="is-primary" tag="router-link" :to="{ name: 'Home' }">
             Start next Quiz!
           </b-button>
         </div>

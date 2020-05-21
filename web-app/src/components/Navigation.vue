@@ -5,16 +5,16 @@
       wrapper-class="container is-widescreen"
     >
       <template slot="brand">
-        <b-navbar-item tag="router-link" :to="{ path: '/' }">
+        <b-navbar-item tag="router-link" :to="{ name: 'Home' }">
           <img src="../assets/logo.svg" alt="Quiz! Logo">
         </b-navbar-item>
       </template>
 
       <template slot="end">
-        <b-navbar-item tag="router-link" :to="{ path: '/' }">
+        <b-navbar-item tag="router-link" :to="{ name: 'Home' }">
           Home
         </b-navbar-item>
-        <b-navbar-item tag="router-link" :to="{ path: '/About'}" >
+        <b-navbar-item tag="router-link" :to="{ name: 'Categories' }" >
           <span class="icon">
             <b-icon pack="fa" icon="edit" size="is-small" />
           </span>
