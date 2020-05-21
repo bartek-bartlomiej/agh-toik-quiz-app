@@ -1,20 +1,16 @@
 <template>
-  <div class="section">
-    <div class="container is-widescreen">
-      <div class="columns is-centered">
-        <div class="column is-two-thirds-tablet is-half-desktop">
-          <question
-            v-if="isInProgress"
-            :question-data="currentQuestionData"
-            :questions-quantity="questionsQuantity"
-            @progress-requested="progress"
-            @answer-given="saveAnswer"/>
-          <quiz-summary
-            :correct-answers-quantity="correctAnswersQuantity"
-            :questions-quantity="questionsQuantity"
-            v-else />
-        </div>
-      </div>
+  <div class="columns is-centered">
+    <div class="column is-two-thirds-tablet is-half-desktop">
+      <question
+        v-if="isInProgress"
+        :question-data="currentQuestionData"
+        :questions-quantity="questionsQuantity"
+        @progress-requested="progress"
+        @answer-given="saveAnswer"/>
+      <quiz-summary
+        :correct-answers-quantity="correctAnswersQuantity"
+        :questions-quantity="questionsQuantity"
+        v-else />
     </div>
   </div>
 </template>

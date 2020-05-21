@@ -1,6 +1,5 @@
 <template>
     <b-navbar
-      fixed-top
       shadow
       spaced
       wrapper-class="container is-widescreen"
