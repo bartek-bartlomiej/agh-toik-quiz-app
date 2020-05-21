@@ -69,7 +69,7 @@ export default {
     },
     correctAnswersQuantity () {
       return this.answers.reduce((quantity, answerIndex, index) => {
-        return quantity + (answerIndex === this.questions[index].correctAnswer ? 1 : 0)
+        return answerIndex === this.questions[index].correctAnswer ? quantity + 1 : quantity
       }, 0)
     },
     questionsQuantity () {
