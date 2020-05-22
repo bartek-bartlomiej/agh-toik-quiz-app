@@ -18,38 +18,14 @@
 <script>
 import Question from '../components/quiz/Question'
 import QuizSummary from '../components/quiz/QuizSummary'
+import client from '@/api'
 
 export default {
   name: 'Quiz',
   components: { QuizSummary, Question },
   data: function () {
     return {
-      questions: [
-        {
-          answers: ['Thanos', 'Shaggy', 'Superman', 'Saitama'],
-          body: 'Who is the most powerful hero in the world?',
-          category: 'Memes',
-          correctAnswer: 1,
-          difficulty: 'hard',
-          id: 0
-        },
-        {
-          answers: ['X', '22', '?', '4'],
-          body: '2+2=?',
-          category: 'Arithmetic',
-          correctAnswer: 3,
-          difficulty: 'easy',
-          id: 1
-        },
-        {
-          answers: ['Gray wolf', 'Fox', 'Bear', 'Owl'],
-          body: 'What animal was the Sheriff of Nottingham in Disney’s Robin Hood?',
-          category: 'Movies',
-          correctAnswer: 0,
-          difficulty: 'hard',
-          id: 2
-        }
-      ],
+      questions: [],
       answers: [],
       currentQuestionIndex: 0
     }
@@ -80,12 +56,47 @@ export default {
     }
   },
   methods: {
+    startQuiz (questions) {
+      this.questions = questions
+      this.currentQuestionIndex = 0
+    },
     saveAnswer (givenAnswer) {
       this.answers.push(givenAnswer)
     },
     progress () {
       this.currentQuestionIndex += 1
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    client.getQuizQuestions(to.params)
+      .then(response => {
+        if (response.data.length === 0) {
+          next(false) // todo change to error(0)
+          return
+        }
+        next(vm => vm.startQuiz(response.data))
+      })
+      .catch(error => {
+        console.error('Could not get questions: ' + error.toString())
+        next(false) // todo change to error(conn)
+      })
+  },
+  beforeRouteUpdate (to, from, next) {
+    client.getQuizQuestions(to.params)
+      .then(response => {
+        this.startQuiz(response.data)
+        next()
+      })
+      .catch(error => {
+        console.error('Could not get questions: ' + error.toString())
+        this.$buefy.toast.open({
+          duration: 3000,
+          message: 'Could not get questions',
+          position: 'is-bottom',
+          type: 'is-warning'
+        })
+        next(false)
+      })
   }
 }
 </script>

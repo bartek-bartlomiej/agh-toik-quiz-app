@@ -48,6 +48,16 @@ export default {
   },
   methods: {
     handleSubmit () {
+      this.$router.push({ name: 'Quiz', params: this.quizData },
+        () => {},
+        () => {
+          this.$buefy.toast.open({
+            duration: 3000,
+            message: 'Questions not found...',
+            position: 'is-bottom',
+            type: 'is-warning'
+          })
+        })
     }
   }
 }
