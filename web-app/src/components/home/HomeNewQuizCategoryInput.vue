@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import client from '@/api'
+
 export default {
   name: 'HomeNewQuizCategoryInput',
   props: {
@@ -29,6 +31,29 @@ export default {
       loading: true,
       categories: []
     }
+  },
+  methods: {
+    loadCategories () {
+      this.loading = true
+      client.getCategories()
+        .then(response => {
+          this.categories = response.data
+          this.loading = false
+        })
+        .catch(error => {
+          console.error('Could not get categories: ' + error.toString())
+          this.$buefy.toast.open({
+            duration: 3000,
+            message: 'Could not display categories. Will try again in 5 seconds.',
+            position: 'is-bottom',
+            type: 'is-warning'
+          })
+          setTimeout(() => this.loadCategories(), 5000)
+        })
+    }
+  },
+  mounted () {
+    this.loadCategories()
   }
 }
 </script>
