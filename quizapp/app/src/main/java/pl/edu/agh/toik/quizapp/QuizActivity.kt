@@ -7,7 +7,7 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_quiz.*
-import pl.edu.agh.toik.quizapp.model.Category
+import pl.edu.agh.toik.quizapp.api.QuizApi
 import pl.edu.agh.toik.quizapp.model.Difficulty
 import pl.edu.agh.toik.quizapp.model.Question
 
@@ -18,30 +18,14 @@ class QuizActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz)
-        val request = intent.getStringExtra(EXTRA_REQUEST)
-        val questions = requestQuestions(request!!)
+        val quantity = intent.getIntExtra(EXTRA_QUANTITY, 5)
+        val difficulty = Difficulty.valueOf(intent.getStringExtra(EXTRA_DIFFICULTY)!!)
+        val category = intent.getStringExtra(EXTRA_CATEGORY)!!
+        val questions = QuizApi().getQuizQuestions(quantity, difficulty, category)
         start(questions)
     }
 
-    private fun requestQuestions(request: String): List<Question> {
-        val question1 = Question(123,
-            Category(1, "Sport"),
-            Difficulty.easy.value,
-            "raz dwa trzy",
-            0,
-            arrayOf("raz", "dwa", "trzy", "cztery")
-        )
-        val question2 = Question(123,
-            Category(1,"Sport"),
-            Difficulty.easy.value,
-            "cztery pięć sześć",
-            1,
-            arrayOf("cztery", "pięć", "szcześć")
-        )
-        return arrayListOf(question1, question2)
-    }
-
-    private fun start(questions: List<Question>) {
+    private fun start(questions: Array<Question>) {
         val statistics = Statistics()
         val iterator = questions.iterator()
         if (iterator.hasNext()) {
