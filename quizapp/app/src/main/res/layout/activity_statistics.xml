@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp" >
+    android:layout_margin="16dp">
     <TextView
         android:id="@+id/textViewStatistics"
         android:layout_width="match_parent"
@@ -11,49 +10,46 @@
         android:paddingTop="16dp"
         android:gravity="center"
         android:text="@string/text_view_statistics"
-        android:textSize="35sp"/>
+        android:textSize="26sp"/>
     <TextView
         android:id="@+id/textViewPositiveAnswers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
-        android:gravity="center"
         android:layout_below="@id/textViewStatistics"
         android:text="@string/text_view_positive_answers"
-        android:textSize="25sp"/>
+        android:textSize="16sp"/>
     <TextView
         android:id="@+id/textViewPositiveAnswersNum"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
-        android:gravity="center"
         android:layout_below="@id/textViewPositiveAnswers"
-        android:textColor="#00FF00"
-        android:textSize="25sp"/>
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16sp"/>
     <TextView
         android:id="@+id/textViewNegativeAnswers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
-        android:gravity="center"
         android:layout_below="@id/textViewPositiveAnswersNum"
         android:text="@string/text_view_negative_answers"
-        android:textSize="25sp"/>
+        android:textSize="16sp"/>
     <TextView
         android:id="@+id/textViewNegativeAnswersNum"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
-        android:gravity="center"
         android:layout_below="@id/textViewNegativeAnswers"
-        android:textColor="#FF0000"
-        android:textSize="25sp"/>
+        android:textColor="@color/red"
+        android:textSize="16sp"/>
     <Button
         android:id="@+id/buttonAgain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:text="@string/button_again"
+        android:background="@color/helper"
         android:gravity="center"
         android:onClick="returnToMainActivity"/>
 

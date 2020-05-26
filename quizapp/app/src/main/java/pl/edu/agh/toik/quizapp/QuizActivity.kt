@@ -47,10 +47,10 @@ class QuizActivity : AppCompatActivity() {
         listViewQuestions.onItemClickListener = OnItemClickListener { adapterView, view, i, l ->
             val color = if (i == question.correctAnswer) {
                 statistics.updatePositiveAnswers()
-                "#00FF00"
+                "#d1f7ff"
             } else {
                 statistics.updateNegativeAnswers()
-                "#FF0000"
+                "#ff2a6d"
             }
             view.setBackgroundColor(Color.parseColor(color))
             listViewQuestions.onItemClickListener = null
