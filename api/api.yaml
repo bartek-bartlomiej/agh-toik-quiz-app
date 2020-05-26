@@ -1,37 +1,65 @@
 openapi: 3.0.1
 info:
-  title: Swagger Questions
-  version: 1.0.2
+  title: Quiz! API
+  description: 'This is a API for Quiz application made for the Components-based Technologies course.
+  You can find out more about at [https://github.com/bartek-bartlomiej/agh-toik-quiz-app](https://github.com/bartek-bartlomiej/agh-toik-quiz-app).'
+  license:
+    name: MIT
+  version: 1.0.3
 servers:
-- url: https://question.swagger.io/api/v1
-- url: http://question.swagger.io/api/v1
+- url: http://ec2-3-126-103-190.eu-central-1.compute.amazonaws.com:8080/api/v1/
 tags:
-- name: questions
 - name: quiz
+  description: Operations for acquiring questions for quiz
+- name: questions
+  description: Operations for managing questions
 - name: categories
+  description: Operations for managing questions' categories
 paths:
   /questions:
-    put:
+    post:
       tags:
       - questions
-      summary: Update an existing Question
-      operationId: updateQuestion
+      summary: Add a new question
+      operationId: addQuestion
       requestBody:
-        description: Question object that needs to be updated to the db
+        description: Question that needs to be added to the database
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Question'
+      responses:
+        201:
+          description: Operation successful - contains question object with generated ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+        405:
+          description: Invalid input
+          content: {}
+    put:
+      tags:
+      - questions
+      summary: Update an existing question
+      operationId: updateQuestion
+      requestBody:
+        description: Question that needs to be updated
         required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Question'
       responses:
         200:
-          description: OK
+          description: Operation successful
           content: 
             application/json:
               schema:
                 $ref: '#/components/schemas/Question'
         400:
-          description: Invalid Question supplied
+          description: Invalid ID supplied
           content: {}
         404:
           description: Question not found
@@ -39,56 +67,22 @@ paths:
         405:
           description: Invalid input
           content: {}
-    post:
-      tags:
-      - questions
-      summary: Add a new Question
-      operationId: addQuestion
-      requestBody:
-        description: Question object that needs to be added to the db
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Question'
-        required: true
-      responses:
-        201:
-          description: OK
-          content: 
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Question'
-        405:
-          description: Invalid input
-          content: {}
-      
-  /quiz:
     get:
       tags:
-      - quiz
-      summary: Finds quiz questions by query
-      description: Multiple parameters can be provided
-      operationId: getQuizQuestions
+      - questions
+      summary: Return questions by category
+      operationId: getQuestions
       parameters:
-      - name: quantity
-        in: query
-        description: How much Questions do you want
-        schema:
-          type: integer
-          default: 5
-      - name: difficulty
-        in: query
-        description: How difficult Questions should be
-        schema:
-          $ref: '#/components/schemas/Difficulty'
       - name: category
         in: query
-        description: Question category
+        description: Category ID
+        required: true
         schema:
-          type: string
+          type: integer
+          format: int64
       responses:
         200:
-          description: successful operation
+          description: Operation successful
           content:
             application/json:
               schema:
@@ -96,14 +90,92 @@ paths:
                 items:
                   $ref: '#/components/schemas/Question'
         400:
-          description: Invalid parameters
+          description: Invalid ID supplied
           content: {}
-  
+  /questions/{questionId}:
+    delete:
+      tags:
+      - questions
+      summary: Delete a question
+      operationId: deleteQuestion
+      parameters:
+      - name: questionId
+        in: path
+        description: ID of question to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        204:
+          description: Operation successful
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Question not found
+          content: {}
   /categories:
+    post:
+      tags:
+      - categories
+      summary: Add a new category
+      operationId: addCategory
+      requestBody:
+        description: Category that needs to be added to the database
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        201:
+          description: Operation successful - contains category object with generated ID
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        405:
+          description: Invalid input
+          content: {}
+        409:
+          description: Given category name already exists
+          content: {}
+    put:
+      tags:
+      - categories
+      summary: Update an existing category
+      operationId: updateCategory
+      requestBody:
+        description: Category that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        200:
+          description: Operation successful
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Category not found
+          content: {}
+        405:
+          description: Invalid input
+          content: {}
+        409:
+          description: Given category name already exists
+          content: {}
     get:
       tags:
       - categories
-      summary: Gets all categories
+      summary: Get all categories
       operationId: getCategories
       responses:
         200:
@@ -113,36 +185,70 @@ paths:
               schema:
                 type: array
                 items:
-                  type: string
-        404:
-          description: bad request
-          content: {}
-    post:
+                  $ref: '#/components/schemas/Category'
+  /categories/{categoryId}:
+    delete:
       tags:
       - categories
-      summary: Add a new Category
-      operationId: addCategory
-      requestBody:
-        description: Category that needs to be added to the db
-        content:
-          application/json:
-            schema:
-              type: string
+      summary: Delete a category
+      operationId: deleteCategory
+      parameters:
+      - name: categoryId
+        in: path
+        description: ID of category to delete
         required: true
+        schema:
+          type: integer
+          format: int64
       responses:
-        201:
-          description: OK
-          content: 
+        204:
+          description: Operation successful
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Category not found
+          content: {}
+  /quiz:
+    get:
+      tags:
+      - quiz
+      summary: Acquire quiz questions by query
+      description: Multiple parameters can be provided
+      operationId: getQuizQuestions
+      parameters:
+      - name: quantity
+        in: query
+        description: How much questions do you want
+        required: true
+        schema:
+          type: integer
+          default: 5
+      - name: difficulty
+        in: query
+        description: How difficult questions should be
+        required: true
+        schema:
+          $ref: '#/components/schemas/Difficulty'
+      - name: category
+        in: query
+        description: Question category ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: Operation successful
+          content:
             application/json:
               schema:
-                type: string
-        405:
-          description: Invalid input
+                type: array
+                items:
+                  $ref: '#/components/schemas/Question'
+        400:
+          description: Invalid parameters
           content: {}
-        409:
-          description: Given category already exists
-          content: {}
-
 components:
   schemas:
     Question:
@@ -152,7 +258,7 @@ components:
           type: integer
           format: int64
         category:
-          type: string
+          $ref: '#/components/schemas/Category'
         difficulty:
           type: string
         body:
@@ -163,6 +269,14 @@ components:
           type: array
           items:
             type: string
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
     Difficulty:
       type: string
       enum:
