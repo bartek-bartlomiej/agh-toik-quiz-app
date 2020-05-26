@@ -5,47 +5,67 @@
  */
 package agh.toik.api;
 
+import agh.toik.model.Category;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.bind.annotation.CookieValue;
 
+import javax.annotation.Generated;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
 import java.util.List;
-import java.util.Map;
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-05-19T18:19:31.581Z[GMT]")
+
+@Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-05-26T17:58:06.365Z[GMT]")
 @Api(value = "categories", description = "the categories API")
 public interface CategoriesApi {
 
-    @ApiOperation(value = "Add a new Category", nickname = "addCategory", notes = "", response = String.class, tags={ "categories", })
+    @ApiOperation(value = "Add a new category", nickname = "addCategory", notes = "", response = Category.class, tags={ "categories", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 201, message = "OK", response = String.class),
+        @ApiResponse(code = 201, message = "Operation successful - contains category object with generated ID", response = Category.class),
         @ApiResponse(code = 405, message = "Invalid input"),
-        @ApiResponse(code = 409, message = "Given category already exists") })
+        @ApiResponse(code = 409, message = "Given category name already exists") })
     @RequestMapping(value = "/categories",
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<String> addCategory(@ApiParam(value = "Category that needs to be added to the db" ,required=true )  @Valid @RequestBody String body
+    ResponseEntity<Category> addCategory(@ApiParam(value = "Category that needs to be added to the database" ,required=true )  @Valid @RequestBody Category body
 );
 
 
-    @ApiOperation(value = "Gets all categories", nickname = "getCategories", notes = "", response = String.class, responseContainer = "List", tags={ "categories", })
+    @ApiOperation(value = "Delete a category", nickname = "deleteCategory", notes = "", tags={ "categories", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "successful operation", response = String.class, responseContainer = "List"),
-        @ApiResponse(code = 404, message = "bad request") })
+        @ApiResponse(code = 204, message = "Operation successful"),
+        @ApiResponse(code = 400, message = "Invalid ID supplied"),
+        @ApiResponse(code = 404, message = "Category not found") })
+    @RequestMapping(value = "/categories/{categoryId}",
+        method = RequestMethod.DELETE)
+    ResponseEntity<Void> deleteCategory(@ApiParam(value = "ID of category to delete",required=true) @PathVariable("categoryId") Long categoryId
+);
+
+
+    @ApiOperation(value = "Get all categories", nickname = "getCategories", notes = "", response = Category.class, responseContainer = "List", tags={ "categories", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "successful operation", response = Category.class, responseContainer = "List") })
     @RequestMapping(value = "/categories",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<String>> getCategories();
+    ResponseEntity<List<Category>> getCategories();
+
+
+    @ApiOperation(value = "Update an existing category", nickname = "updateCategory", notes = "", response = Category.class, tags={ "categories", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Operation successful", response = Category.class),
+        @ApiResponse(code = 400, message = "Invalid ID supplied"),
+        @ApiResponse(code = 404, message = "Category not found"),
+        @ApiResponse(code = 405, message = "Invalid input"),
+        @ApiResponse(code = 409, message = "Given category name already exists") })
+    @RequestMapping(value = "/categories",
+        produces = { "application/json" }, 
+        consumes = { "application/json" },
+        method = RequestMethod.PUT)
+    ResponseEntity<Category> updateCategory(@ApiParam(value = "Category that needs to be updated" ,required=true )  @Valid @RequestBody Category body
+);
 
 }

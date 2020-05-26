@@ -3,27 +3,30 @@ package agh.toik.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.validation.annotation.Validated;
+
+import javax.annotation.Generated;
 import javax.validation.Valid;
 
 /**
  * Question
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-05-19T18:19:31.581Z[GMT]")
 @Document
+@Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-05-26T17:58:06.365Z[GMT]")
 public class Question   {
   @JsonProperty("id")
   @Id
   private Long id = null;
 
   @JsonProperty("category")
-  private String category = null;
+  private Category category = null;
 
   @JsonProperty("difficulty")
   private String difficulty = null;
@@ -60,7 +63,7 @@ public class Question   {
     this.id = id;
   }
 
-  public Question category(String category) {
+  public Question category(Category category) {
     this.category = category;
     return this;
   }
@@ -71,11 +74,12 @@ public class Question   {
   **/
   @ApiModelProperty(value = "")
   
-    public String getCategory() {
+    @Valid
+    public Category getCategory() {
     return category;
   }
 
-  public void setCategory(String category) {
+  public void setCategory(Category category) {
     this.category = category;
   }
 
