@@ -1,17 +1,19 @@
 openapi: 3.0.1
 info:
   title: Swagger Questions
-  version: 1.0.1
+  version: 1.0.2
 servers:
 - url: https://question.swagger.io/api/v1
 - url: http://question.swagger.io/api/v1
 tags:
-- name: question
+- name: questions
+- name: quiz
+- name: categories
 paths:
-  /question:
+  /questions:
     put:
       tags:
-      - question
+      - questions
       summary: Update an existing Question
       operationId: updateQuestion
       requestBody:
@@ -37,10 +39,9 @@ paths:
         405:
           description: Invalid input
           content: {}
-      x-codegen-request-body-name: body
     post:
       tags:
-      - question
+      - questions
       summary: Add a new Question
       operationId: addQuestion
       requestBody:
@@ -60,15 +61,14 @@ paths:
         405:
           description: Invalid input
           content: {}
-      x-codegen-request-body-name: body
       
-  /questions:
+  /quiz:
     get:
       tags:
-      - questions
-      summary: Finds Questions by query
+      - quiz
+      summary: Finds quiz questions by query
       description: Multiple parameters can be provided
-      operationId: findQuestionsByQuery
+      operationId: getQuizQuestions
       parameters:
       - name: quantity
         in: query
@@ -98,6 +98,51 @@ paths:
         400:
           description: Invalid parameters
           content: {}
+  
+  /categories:
+    get:
+      tags:
+      - categories
+      summary: Gets all categories
+      operationId: getCategories
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        404:
+          description: bad request
+          content: {}
+    post:
+      tags:
+      - categories
+      summary: Add a new Category
+      operationId: addCategory
+      requestBody:
+        description: Category that needs to be added to the db
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        201:
+          description: OK
+          content: 
+            application/json:
+              schema:
+                type: string
+        405:
+          description: Invalid input
+          content: {}
+        409:
+          description: Given category already exists
+          content: {}
+
 components:
   schemas:
     Question:
