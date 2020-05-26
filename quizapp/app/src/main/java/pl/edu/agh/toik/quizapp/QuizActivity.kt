@@ -1,5 +1,7 @@
 package pl.edu.agh.toik.quizapp
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -26,6 +28,16 @@ class QuizActivity : AppCompatActivity() {
     }
 
     private fun start(questions: Array<Question>) {
+        if (questions.isEmpty()) {
+            AlertDialog.Builder(this)
+                .setTitle("No such questions")
+                .setMessage("We could not find questions for specified category and difficulty")
+                .setPositiveButton(android.R.string.yes) {
+                        _, _ -> navigateUpTo(Intent(baseContext, MainActivity::class.java))
+                }
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show()
+        }
         val statistics = Statistics()
         val iterator = questions.iterator()
         if (iterator.hasNext()) {

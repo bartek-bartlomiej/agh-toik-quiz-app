@@ -30,14 +30,18 @@ class MainActivity : AppCompatActivity() {
         val spinnerCategory = findViewById<NiceSpinner>(R.id.spinnerCategory)
         val editTextQuantity = findViewById<EditText>(R.id.editTextQuantity)
         val spinnerDifficulty = findViewById<NiceSpinner>(R.id.spinnerDifficulty)
-        val quantity = Integer.parseInt(editTextQuantity.text.toString())
-        val difficulty = spinnerDifficulty.selectedItem.toString()
-        val category = spinnerCategory.selectedItem.toString()
-        val intent = Intent(this, QuizActivity::class.java).apply {
-            putExtra(EXTRA_QUANTITY, quantity)
-            putExtra(EXTRA_DIFFICULTY, difficulty)
-            putExtra(EXTRA_CATEGORY, category)
+        if (editTextQuantity.text.isEmpty()) {
+            editTextQuantity.error = "Quantity is required"
+        } else {
+            val quantity = Integer.parseInt(editTextQuantity.text.toString())
+            val difficulty = spinnerDifficulty.selectedItem.toString()
+            val category = spinnerCategory.selectedItem.toString()
+            val intent = Intent(this, QuizActivity::class.java).apply {
+                putExtra(EXTRA_QUANTITY, quantity)
+                putExtra(EXTRA_DIFFICULTY, difficulty)
+                putExtra(EXTRA_CATEGORY, category)
+            }
+            startActivity(intent)
         }
-        startActivity(intent)
     }
 }
