@@ -7,6 +7,7 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_quiz.*
+import pl.edu.agh.toik.quizapp.model.Category
 import pl.edu.agh.toik.quizapp.model.Difficulty
 import pl.edu.agh.toik.quizapp.model.Question
 
@@ -24,14 +25,14 @@ class QuizActivity : AppCompatActivity() {
 
     private fun requestQuestions(request: String): List<Question> {
         val question1 = Question(123,
-            "Sport",
+            Category(1, "Sport"),
             Difficulty.easy.value,
             "raz dwa trzy",
             0,
             arrayOf("raz", "dwa", "trzy", "cztery")
         )
         val question2 = Question(123,
-            "Sport",
+            Category(1,"Sport"),
             Difficulty.easy.value,
             "cztery pięć sześć",
             1,

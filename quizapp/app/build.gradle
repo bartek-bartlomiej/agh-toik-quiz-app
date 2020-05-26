@@ -8,7 +8,7 @@ apply plugin: 'kotlin-android-extensions'
 
 swaggerSources {
     quizappApi {
-        inputFile = file("api.yml")
+        inputFile = file("../../api/api.yaml")
         code {
             language = 'kotlin'
             configFile = file('config.json')
