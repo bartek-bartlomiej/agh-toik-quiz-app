@@ -68,7 +68,12 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    client.getQuizQuestions(to.params)
+    const parameters = {
+      category: to.params.categoryId,
+      difficulty: to.params.difficulty,
+      quantity: to.params.quantity
+    }
+    client.getQuizQuestions(parameters)
       .then(response => {
         if (response.data.length === 0) {
           next(false) // todo change to error(0)
@@ -82,7 +87,12 @@ export default {
       })
   },
   beforeRouteUpdate (to, from, next) {
-    client.getQuizQuestions(to.params)
+    const parameters = {
+      category: to.params.categoryId,
+      difficulty: to.params.difficulty,
+      quantity: to.params.quantity
+    }
+    client.getQuizQuestions(parameters)
       .then(response => {
         this.startQuiz(response.data)
         next()

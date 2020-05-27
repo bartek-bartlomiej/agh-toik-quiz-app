@@ -9,9 +9,9 @@
     >
       <option
         v-for="(option, index) in categories"
-        :value="option"
+        :value="option.id"
         :key="index">
-        {{ option }}
+        {{ option.name }}
       </option>
     </b-select>
   </b-field>
@@ -23,7 +23,7 @@ import client from '@/api'
 export default {
   name: 'HomeNewQuizCategoryInput',
   props: {
-    value: String
+    value: Number
   },
   data: function () {
     return {

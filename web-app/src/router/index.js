@@ -21,7 +21,7 @@ const routes = [
         name: 'Quiz',
         component: Quiz,
         beforeEnter: (to, from, next) => {
-          if (typeof to.params.category === 'undefined') { // TODO more precise validation
+          if (typeof to.params.categoryId === 'undefined') { // TODO more precise validation
             next({ name: 'Home', replace: true })
           }
           next()

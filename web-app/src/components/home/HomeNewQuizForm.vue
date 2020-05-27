@@ -2,7 +2,7 @@
   <form @submit.prevent="handleSubmit">
     <section class="section box">
       <b-field horizontal label="Category">
-        <quiz-category-input v-model="quizData.category"/>
+        <quiz-category-input v-model="quizData.categoryId"/>
       </b-field>
 
       <b-field horizontal label="Difficulty">
@@ -33,7 +33,7 @@ export default {
     return {
       loading: false,
       quizData: {
-        category: undefined,
+        categoryId: undefined,
         difficulty: Difficulty.get('medium'),
         quantity: 5
       }
@@ -41,7 +41,7 @@ export default {
   },
   computed: {
     dataValid () {
-      return typeof this.quizData.category === 'string' &&
+      return typeof this.quizData.categoryId === 'number' &&
         Difficulty.has(this.quizData.difficulty) &&
         (this.quizData.quantity > 0 && this.quizData.quantity <= 100)
     }
