@@ -33,6 +33,7 @@
 export default {
   name: 'category-summary',
   props: {
+    id: Number,
     name: String,
     quantity: Number
   },

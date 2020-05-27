@@ -66,8 +66,8 @@ export default {
       client.getCategories()
         .then(response => {
           this.categorySummaries = response.data
-            .map(name => ({
-              name,
+            .map(category => ({
+              ...category,
               quantity: NaN
             }))
           this.loading = false
@@ -83,9 +83,9 @@ export default {
           setTimeout(() => this.loadCategories(), 5000)
         })
     },
-    handleCategoryAdded (name) {
+    handleCategoryAdded (category) {
       this.categorySummaries.push({
-        name,
+        ...category,
         quantity: 0
       })
     }

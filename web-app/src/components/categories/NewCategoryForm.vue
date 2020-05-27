@@ -35,8 +35,11 @@ export default {
   },
   methods: {
     handleSubmit () {
-      // have to add Content-Type header manually due to OpenApi-client-axios behaviour
-      client.addCategory(null, this.name, { headers: { 'Content-Type': 'application/json' } })
+      const category = {
+        id: 0,
+        name: this.name
+      }
+      client.addCategory(null, category)
         .then(response => {
           console.log(response.data)
 
