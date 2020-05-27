@@ -21,19 +21,28 @@
           </div>
         </div>
       </nav>
-      <div class="columns is-multiline">
         <template v-if="loading">
-          <category-summary-skeleton
-            v-for="index in 4"
-            :key="index" />
+          <div class="columns is-multiline">
+            <category-summary-skeleton
+              v-for="index in 4"
+              :key="index" />
+          </div>
         </template>
         <template v-else>
-          <category-summary
-            v-for="(summary, index) in sortedSummaries"
-            v-bind="summary"
-            :key="index" />
+          <template v-if="categorySummaries.length > 0">
+            <div class="columns is-multiline">
+            <category-summary
+              v-for="(summary, index) in sortedSummaries"
+              v-bind="summary"
+              :key="index" />
+            </div>
+          </template>
+          <template v-else>
+            <div class="content">
+              No categories defined. <a @click="isNewCategoryModalVisible = true">Add a new one</a>.
+            </div>
+          </template>
         </template>
-      </div>
     </div>
   </div>
 </template>
