@@ -3,8 +3,11 @@
     <div class="column is-two-thirds-tablet is-half-desktop">
       <question
         v-if="isInProgress"
-        :question-data="currentQuestionData"
-        :questions-quantity="questionsQuantity"
+        v-bind="{
+          ordinal: currentQuestionOrdinal,
+          ...currentQuestionData,
+          questionsQuantity
+        }"
         @progress-requested="progress"
         @answer-given="saveAnswer"/>
       <quiz-summary
@@ -16,8 +19,8 @@
 </template>
 
 <script>
-import Question from '../components/quiz/Question'
-import QuizSummary from '../components/quiz/QuizSummary'
+import Question from '@/components/quiz/QuizQuestion'
+import QuizSummary from '@/components/quiz/QuizSummary'
 import client from '@/api'
 
 export default {
@@ -34,7 +37,6 @@ export default {
     currentQuestionData () {
       const currentQuestion = this.questions[this.currentQuestionIndex]
       return {
-        ordinal: this.currentQuestionOrdinal,
         body: currentQuestion.body,
         correctAnswer: currentQuestion.correctAnswer,
         answers: currentQuestion.answers

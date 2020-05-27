@@ -21,9 +21,9 @@
 </template>
 
 <script>
-import QuizCategoryInput from './HomeNewQuizCategoryInput'
-import QuizDifficultyInput from './HomeNewQuizDifficultyInput'
-import QuizQuantityInput from './HomeNewQuizQuantityInput'
+import QuizCategoryInput from './NewQuizCategoryInput'
+import QuizDifficultyInput from './NewQuizDifficultyInput'
+import QuizQuantityInput from './NewQuizQuantityInput'
 import { Difficulty } from '@/api/model'
 
 export default {

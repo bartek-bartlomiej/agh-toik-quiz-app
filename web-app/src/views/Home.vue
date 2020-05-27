@@ -22,7 +22,7 @@
 
 <script>
 import Navigation from '@/components/Navigation'
-import QuizForm from '@/components/home/HomeNewQuizForm'
+import QuizForm from '@/components/home/NewQuizForm'
 
 export default {
   name: 'Home',
