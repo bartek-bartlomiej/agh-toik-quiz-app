@@ -1,6 +1,8 @@
-package agh.toik.api;
+package agh.toik.exception;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-05-19T18:19:31.581Z[GMT]")
+import javax.annotation.Generated;
+
+@Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-05-26T17:58:06.365Z[GMT]")
 public class NotFoundException extends ApiException {
     private int code;
     public NotFoundException (int code, String msg) {

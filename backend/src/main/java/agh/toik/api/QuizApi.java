@@ -13,23 +13,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.annotation.Generated;
 import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.util.List;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-05-19T18:19:31.581Z[GMT]")
+@Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-05-26T17:58:06.365Z[GMT]")
 @Api(value = "quiz", description = "the quiz API")
 public interface QuizApi {
 
-    @ApiOperation(value = "Finds quiz questions by query", nickname = "getQuizQuestions", notes = "Multiple parameters can be provided", response = Question.class, responseContainer = "List", tags={ "quiz", })
+    @ApiOperation(value = "Acquire quiz questions by query", nickname = "getQuizQuestions", notes = "Multiple parameters can be provided", response = Question.class, responseContainer = "List", tags={ "quiz", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "successful operation", response = Question.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "Operation successful", response = Question.class, responseContainer = "List"),
         @ApiResponse(code = 400, message = "Invalid parameters") })
     @RequestMapping(value = "/quiz",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Question>> getQuizQuestions(@ApiParam(value = "How much Questions do you want", defaultValue = "5") @Valid @RequestParam(value = "quantity", required = false, defaultValue="5") Integer quantity
-,@ApiParam(value = "How difficult Questions should be") @Valid @RequestParam(value = "difficulty", required = false) String difficulty
-,@ApiParam(value = "Question category") @Valid @RequestParam(value = "category", required = false) String category
+    ResponseEntity<List<Question>> getQuizQuestions(@NotNull @ApiParam(value = "How much questions do you want", required = true, defaultValue = "5") @Valid @RequestParam(value = "quantity", required = true, defaultValue="5") Integer quantity
+,@NotNull @ApiParam(value = "How difficult questions should be", required = true) @Valid @RequestParam(value = "difficulty", required = true) String difficulty
+,@NotNull @ApiParam(value = "Question category ID", required = true) @Valid @RequestParam(value = "category", required = true) Long category
 );
 
 }
