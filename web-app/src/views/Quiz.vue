@@ -1,19 +1,21 @@
 <template>
   <div class="columns is-centered">
     <div class="column is-two-thirds-tablet is-half-desktop">
-      <question
-        v-if="isInProgress"
-        v-bind="{
-          ordinal: currentQuestionOrdinal,
-          ...currentQuestionData,
-          questionsQuantity
-        }"
-        @progress-requested="progress"
-        @answer-given="saveAnswer"/>
-      <quiz-summary
-        :correct-answers-quantity="correctAnswersQuantity"
-        :questions-quantity="questionsQuantity"
-        v-else />
+      <template v-if="isInProgress">
+        <question
+          v-bind="{
+            ordinal: currentQuestionOrdinal,
+            ...currentQuestionData,
+            questionsQuantity
+          }"
+          @progress-requested="progress"
+          @answer-given="saveAnswer" />
+      </template>
+      <template v-else>
+        <quiz-summary
+          :correct-answers-quantity="correctAnswersQuantity"
+          :questions-quantity="questionsQuantity" />
+      </template>
     </div>
   </div>
 </template>
@@ -75,14 +77,14 @@ export default {
     client.getQuizQuestions(query)
       .then(response => {
         if (response.data.length === 0) {
-          next(false) // todo change to error(0)
+          next(Error('No question found for this category'))
           return
         }
         next(vm => vm.startQuiz(response.data))
       })
       .catch(error => {
         console.error('Could not get questions: ' + error.toString())
-        next(false) // todo change to error(conn)
+        next(Error('Could not get questions from server'))
       })
   }
 }

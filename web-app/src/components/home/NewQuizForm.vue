@@ -39,10 +39,10 @@ export default {
     handleSubmit () {
       this.$router.push({ name: 'Quiz', params: this.quizData.toParameters() },
         () => {},
-        () => {
+        error => {
           this.$buefy.toast.open({
             duration: 3000,
-            message: 'Questions not found...',
+            message: `${error.message}…`,
             position: 'is-bottom',
             type: 'is-warning'
           })
