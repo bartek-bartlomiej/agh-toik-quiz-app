@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import AbstractView from '../views/AbstractView'
 import Quiz from '../views/Quiz'
+import { QuizQueryDTO } from '../api/model'
 
 Vue.use(VueRouter)
 
@@ -21,7 +22,8 @@ const routes = [
         name: 'Quiz',
         component: Quiz,
         beforeEnter: (to, from, next) => {
-          if (typeof to.params.categoryId === 'undefined') { // TODO more precise validation
+          const query = QuizQueryDTO.parseParameters(to.params)
+          if (typeof query.category === 'undefined' || typeof query.difficulty === 'undefined' || typeof query.quantity !== 'number') {
             next({ name: 'Home', replace: true })
           }
           next()

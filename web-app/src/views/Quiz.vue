@@ -22,6 +22,7 @@
 import Question from '@/components/quiz/QuizQuestion'
 import QuizSummary from '@/components/quiz/QuizSummary'
 import client from '@/api'
+import { QuizQueryDTO } from '@/api/model'
 
 export default {
   name: 'Quiz',
@@ -70,12 +71,8 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    const parameters = {
-      category: to.params.categoryId,
-      difficulty: to.params.difficulty,
-      quantity: to.params.quantity
-    }
-    client.getQuizQuestions(parameters)
+    const query = QuizQueryDTO.parseParameters(to.params)
+    client.getQuizQuestions(query)
       .then(response => {
         if (response.data.length === 0) {
           next(false) // todo change to error(0)
@@ -86,28 +83,6 @@ export default {
       .catch(error => {
         console.error('Could not get questions: ' + error.toString())
         next(false) // todo change to error(conn)
-      })
-  },
-  beforeRouteUpdate (to, from, next) {
-    const parameters = {
-      category: to.params.categoryId,
-      difficulty: to.params.difficulty,
-      quantity: to.params.quantity
-    }
-    client.getQuizQuestions(parameters)
-      .then(response => {
-        this.startQuiz(response.data)
-        next()
-      })
-      .catch(error => {
-        console.error('Could not get questions: ' + error.toString())
-        this.$buefy.toast.open({
-          duration: 3000,
-          message: 'Could not get questions',
-          position: 'is-bottom',
-          type: 'is-warning'
-        })
-        next(false)
       })
   }
 }
