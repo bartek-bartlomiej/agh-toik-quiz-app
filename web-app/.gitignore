@@ -12,3 +12,5 @@ npm-debug.log*
 *.iml
 
 src/assets/css/debug.css
+
+src/api/api.yaml
