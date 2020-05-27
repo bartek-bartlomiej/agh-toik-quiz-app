@@ -2,7 +2,9 @@ package agh.toik.controller;
 
 import agh.toik.api.CategoriesApi;
 import agh.toik.model.Category;
+import agh.toik.model.Question;
 import agh.toik.repo.CategoryRepo;
+import agh.toik.repo.QuestionRepo;
 import agh.toik.utils.Helper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -28,15 +30,23 @@ public class CategoriesApiController implements CategoriesApi {
     private final HttpServletRequest request;
 
     private CategoryRepo categoryRepo;
+    private QuestionRepo questionRepo;
 
     @Autowired
-    public CategoriesApiController(ObjectMapper objectMapper, HttpServletRequest request, CategoryRepo categoryRepo) {
+    public CategoriesApiController(ObjectMapper objectMapper, HttpServletRequest request,
+                                   CategoryRepo categoryRepo, QuestionRepo questionRepo) {
         this.objectMapper = objectMapper;
         this.request = request;
         this.categoryRepo = categoryRepo;
+        this.questionRepo = questionRepo;
     }
 
     public ResponseEntity<Category> addCategory(@Valid @RequestBody Category entity) {
+        Category categoryWithName = categoryRepo.findCategoryByName(entity.getName());
+        if (categoryWithName != null) {
+            return new ResponseEntity<Category>(HttpStatus.CONFLICT);
+        }
+
         entity.setId(Helper.generateID());
         categoryRepo.save(entity);
         return ResponseEntity.ok(entity);
@@ -48,7 +58,10 @@ public class CategoriesApiController implements CategoriesApi {
             return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
         }
 
-        categoryRepo.delete(categoryToDelete);
+        List<Question> questions = questionRepo.findQuestionsByCategory(categoryId);
+        questionRepo.delete(questions); // remove category' questions
+        categoryRepo.delete(categoryToDelete); // remove category
+
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
 
@@ -61,6 +74,11 @@ public class CategoriesApiController implements CategoriesApi {
         Category categoryToUpdate = categoryRepo.findOne(entity.getId());
         if (categoryToUpdate == null) {
             return new ResponseEntity<Category>(HttpStatus.NOT_FOUND);
+        }
+
+        Category categoryWithName = categoryRepo.findCategoryByName(entity.getName());
+        if (categoryWithName != null) {
+            return new ResponseEntity<Category>(HttpStatus.CONFLICT);
         }
 
         categoryRepo.save(entity); // updates object that has _id value

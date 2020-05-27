@@ -1,7 +1,9 @@
 package agh.toik.controller;
 
 import agh.toik.api.QuestionsApi;
+import agh.toik.model.Category;
 import agh.toik.model.Question;
+import agh.toik.repo.CategoryRepo;
 import agh.toik.repo.QuestionRepo;
 import agh.toik.utils.Helper;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,16 +32,25 @@ public class QuestionsApiController implements QuestionsApi {
     private final HttpServletRequest request;
 
     private QuestionRepo questionRepo;
+    private CategoryRepo categoryRepo;
 
     @Autowired
-    public QuestionsApiController(ObjectMapper objectMapper, HttpServletRequest request, QuestionRepo questionRepo) {
+    public QuestionsApiController(ObjectMapper objectMapper, HttpServletRequest request,
+                                  QuestionRepo questionRepo, CategoryRepo categoryRepo) {
         this.objectMapper = objectMapper;
         this.request = request;
         this.questionRepo = questionRepo;
+        this.categoryRepo = categoryRepo;
     }
 
     public ResponseEntity<Question> addQuestion(@Valid @RequestBody Question entity) {
+        Category category = categoryRepo.findOne(entity.getCategory().getId());
+        if (category == null) {
+            return new ResponseEntity<Question>(HttpStatus.METHOD_NOT_ALLOWED);
+        }
+
         entity.setId(Helper.generateID());
+        entity.setCategory(category);
         questionRepo.save(entity);
         return ResponseEntity.ok(entity);
     }
@@ -65,6 +76,12 @@ public class QuestionsApiController implements QuestionsApi {
             return new ResponseEntity<Question>(HttpStatus.NOT_FOUND);
         }
 
+        Category category = categoryRepo.findOne(entity.getCategory().getId());
+        if (category == null) {
+            return new ResponseEntity<Question>(HttpStatus.METHOD_NOT_ALLOWED);
+        }
+
+        entity.setCategory(category);
         questionRepo.save(entity); // updates object that has _id value
         return ResponseEntity.ok(entity);
     }
