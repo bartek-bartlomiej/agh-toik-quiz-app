@@ -10,7 +10,10 @@ import java.util.List;
 @Repository
 public interface QuestionRepo extends MongoRepository<Question, Long> {
 
-    @Query("{'difficulty' : ?0 , 'category' : ?1}")
-    List<Question> findQuestionsByDifficultyAndCategory(String difficulty, String category);
+    @Query("{'difficulty' : ?0 , 'category.id' : ?1}")
+    List<Question> findQuestionsByDifficultyAndCategory(String difficulty, Long category);
+
+    @Query("{'category.id' : ?0}")
+    List<Question> findQuestionsByCategory(Long category);
 
 }
