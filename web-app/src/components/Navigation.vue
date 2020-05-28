@@ -14,7 +14,7 @@
         <b-navbar-item tag="router-link" :to="{ name: 'Home' }">
           Home
         </b-navbar-item>
-        <b-navbar-item tag="router-link" :to="{ name: 'Categories' }" >
+        <b-navbar-item tag="router-link" :to="{ name: 'Categories' }">
           <span class="icon">
             <b-icon pack="fa" icon="edit" size="is-small" />
           </span>
