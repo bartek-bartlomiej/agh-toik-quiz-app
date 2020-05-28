@@ -2,7 +2,7 @@
   <div>
     <nav class="level">
       <div class="level-item">
-        <h1 class="title is-4">Question {{ ordinal }} ouf of {{ questionsQuantity }}</h1>
+        <h1 class="title is-4">Question {{ ordinal }} out of {{ questionsQuantity }}</h1>
       </div>
     </nav>
     <section class="section">
