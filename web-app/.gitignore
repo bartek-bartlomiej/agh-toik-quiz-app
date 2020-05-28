@@ -1,0 +1,16 @@
+node_modules
+dist
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+
+.idea
+*.iml
+
+/src/assets/css/debug.css
+
+/src/api/api.yaml

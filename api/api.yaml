@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: Quiz! API
   description: 'This is a API for Quiz application made for the Components-based Technologies course.
-  You can find out more about at [https://github.com/bartek-bartlomiej/agh-toik-quiz-app](https://github.com/bartek-bartlomiej/agh-toik-quiz-app).'
+    You can find out more about at [https://github.com/bartek-bartlomiej/agh-toik-quiz-app](https://github.com/bartek-bartlomiej/agh-toik-quiz-app).'
   license:
     name: MIT
   version: 1.0.3
@@ -54,7 +54,7 @@ paths:
       responses:
         200:
           description: Operation successful
-          content: 
+          content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Question'
@@ -131,7 +131,7 @@ paths:
       responses:
         201:
           description: Operation successful - contains category object with generated ID
-          content: 
+          content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Category'
@@ -156,7 +156,7 @@ paths:
       responses:
         200:
           description: Operation successful
-          content: 
+          content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Category'
