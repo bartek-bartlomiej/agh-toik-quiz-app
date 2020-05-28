@@ -11,7 +11,7 @@ services:
     container_name: "toik-back"
     image: openjdk:8-jre-alpine
     volumes:
-      - ./backend/target/agh-toik-quiz-server-1.0.1.jar:/app.jar
+      - ./backend/target/agh-toik-quiz-server-1.0.3.jar:/app.jar
     ports:
       - "8080:8080"
     command: "java -jar -Xms512M -Xmx2048M /app.jar"
@@ -19,15 +19,15 @@ services:
       - toik-mongo
     networks:
       - toik-net
-  # toik-front:
-  #   container_name: "toik-front"
-  #   image: httpd:2.4
-  #   volumes:
-  #     - ./frontend/dist/:/usr/local/apache2/htdocs/
-  #     - ./custom-httpd.conf:/usr/local/apache2/conf/httpd.conf
-  #   ports:
-  #     - "x:x"
-  #   networks:
-  #     - toik-net
+  toik-front:
+     container_name: "toik-front"
+     image: httpd:2.4
+     volumes:
+       - ./frontend/dist/:/usr/local/apache2/htdocs/
+       - ./custom-httpd.conf:/usr/local/apache2/conf/httpd.conf
+     ports:
+       - "8081:80"
+     networks:
+       - toik-net
 networks:
   toik-net:

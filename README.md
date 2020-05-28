@@ -4,7 +4,7 @@ Projekt z przedmiotu: Techniki komponentowe
 
 Autorzy: Michał Śledź, Bartłomiej Stępień, Ludwik Ciechański
 
-## Docker-compose setup
+## Docker-compose local setup
 
 1. Turn off existing MongoDB to have port 27017 free.
 2. In backend catalog:
@@ -16,7 +16,10 @@ Autorzy: Michał Śledź, Bartłomiej Stępień, Ludwik Ciechański
 4. In project root:
 - run all containers: `docker-compose up` (add `-d` to start them in detached mode)
 
-## API
+## Remote server (AWS EC2)
 
-1. Main URL: http://localhost:8080/api/v1/
-(by default redirects to: http://localhost:8080/api/v1/swagger-ui.html)
+1. Main API URL: http://ec2-3-126-103-190.eu-central-1.compute.amazonaws.com:8080/api/v1/
+
+2. Swagger UI: http://ec2-3-126-103-190.eu-central-1.compute.amazonaws.com:8080/api/v1/swagger-ui.html
+
+3. Web client: http://ec2-3-126-103-190.eu-central-1.compute.amazonaws.com:8081

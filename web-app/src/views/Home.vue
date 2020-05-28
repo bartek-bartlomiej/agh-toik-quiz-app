@@ -1,30 +1,37 @@
 <template>
-  <div>
-    <section class="hero is-medium is-white is-bold">
-      <div class="hero-body">
-        <figure class="image center">
-          <img id="logo" src="../assets/logo.svg" alt="Quiz! logo">
-        </figure>
+  <div class="hero is-fullheight is-white is-bold">
+    <div class="hero-head">
+      <navigation />
+    </div>
+    <div class="hero-body">
+      <div class="container is-widescreen">
+        <div class="columns is-centered">
+          <div class="column is-two-thirds-tablet is-half-desktop">
+            <div class="content">
+              <figure class="image is-centered">
+                <img id="logo" src="@/assets/logo.svg" alt="Quiz! logo" />
+              </figure>
+              <quiz-form />
+            </div>
+          </div>
+        </div>
       </div>
-    </section>
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import Navigation from '@/components/Navigation'
+import QuizForm from '@/components/home/NewQuizForm'
 
 export default {
   name: 'Home',
-  components: {
-    HelloWorld
-  }
+  components: { Navigation, QuizForm }
 }
 </script>
 
 <style>
   #logo {
-    max-width: 520px;
+    max-width: 420px;
   }
 </style>
