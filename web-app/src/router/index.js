@@ -5,6 +5,7 @@ import AbstractView from '../views/AbstractView'
 import Quiz from '../views/Quiz'
 import { QuizQueryDTO } from '../api/model'
 import Categories from '../views/Categories'
+import Category from '../views/manage/Category'
 
 Vue.use(VueRouter)
 
@@ -34,6 +35,14 @@ const routes = [
         path: '/categories',
         name: 'Categories',
         component: Categories
+      },
+      {
+        path: '/category/:id',
+        name: 'Category',
+        component: Category,
+        props: route => ({
+          id: Number(route.params.id)
+        })
       }
     ]
   }

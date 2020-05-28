@@ -5,6 +5,7 @@
       :class="{ 'is-primary': hover, clickable: hover }"
       @mouseover="hover = true"
       @mouseleave="hover = false"
+      @click="goToCategoryView"
     >
       <div class="media center">
         <div class="media-content">
@@ -45,6 +46,20 @@ export default {
   computed: {
     questionsQuantity () {
       return `${this.quantity} question${this.quantity !== 1 ? 's' : ''}`
+    }
+  },
+  methods: {
+    goToCategoryView () {
+      this.$router.push({ name: 'Category', params: { id: this.id.toString() } },
+        () => {},
+        error => {
+          this.$buefy.toast.open({
+            duration: 3000,
+            message: error.message,
+            position: 'is-bottom',
+            type: 'is-warning'
+          })
+        })
     }
   }
 }
