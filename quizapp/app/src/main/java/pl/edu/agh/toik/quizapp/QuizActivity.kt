@@ -1,7 +1,6 @@
 package pl.edu.agh.toik.quizapp
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -22,7 +21,7 @@ class QuizActivity : AppCompatActivity() {
         setContentView(R.layout.activity_quiz)
         val quantity = intent.getIntExtra(EXTRA_QUANTITY, 5)
         val difficulty = Difficulty.valueOf(intent.getStringExtra(EXTRA_DIFFICULTY)!!)
-        val category = intent.getStringExtra(EXTRA_CATEGORY)!!
+        val category = intent.getLongExtra(EXTRA_CATEGORY, 0)
         val questions = QuizApi().getQuizQuestions(quantity, difficulty, category)
         start(questions)
     }

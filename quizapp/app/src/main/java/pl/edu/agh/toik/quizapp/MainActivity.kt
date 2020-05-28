@@ -3,12 +3,12 @@ package pl.edu.agh.toik.quizapp
 import android.content.Intent
 import android.os.Bundle
 import android.os.StrictMode
-import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import org.angmarch.views.NiceSpinner
 import pl.edu.agh.toik.quizapp.api.CategoriesApi
+import pl.edu.agh.toik.quizapp.model.Category
 import pl.edu.agh.toik.quizapp.model.Difficulty
 
 const val EXTRA_CATEGORY = "pl.edu.agh.toik.quizapp.CATEGORY"
@@ -23,25 +23,36 @@ class MainActivity : AppCompatActivity() {
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
         spinnerDifficulty.attachDataSource(Difficulty.values().asList())
-        spinnerCategory.attachDataSource(CategoriesApi().getCategories().asList())
+        val categories = CategoriesApi().getCategories().toList()
+        val categoriesNames = categories.map{it.name!!}
+        spinnerCategory.attachDataSource(categoriesNames)
+        buttonStart.setOnClickListener {
+            val spinnerCategory = findViewById<NiceSpinner>(R.id.spinnerCategory)
+            val editTextQuantity = findViewById<EditText>(R.id.editTextQuantity)
+            val spinnerDifficulty = findViewById<NiceSpinner>(R.id.spinnerDifficulty)
+            if (editTextQuantity.text.isEmpty()) {
+                editTextQuantity.error = "Quantity is required"
+            } else {
+                val quantity = Integer.parseInt(editTextQuantity.text.toString())
+                val difficulty = spinnerDifficulty.selectedItem.toString()
+                val categoryName = spinnerCategory.selectedItem.toString()
+                val categoryId = findCategoryId(categoryName, categories)
+                val intent = Intent(this, QuizActivity::class.java).apply {
+                    putExtra(EXTRA_QUANTITY, quantity)
+                    putExtra(EXTRA_DIFFICULTY, difficulty)
+                    putExtra(EXTRA_CATEGORY, categoryId)
+                }
+                startActivity(intent)
+            }
+        }
     }
 
-    fun startQuiz(view: View) {
-        val spinnerCategory = findViewById<NiceSpinner>(R.id.spinnerCategory)
-        val editTextQuantity = findViewById<EditText>(R.id.editTextQuantity)
-        val spinnerDifficulty = findViewById<NiceSpinner>(R.id.spinnerDifficulty)
-        if (editTextQuantity.text.isEmpty()) {
-            editTextQuantity.error = "Quantity is required"
-        } else {
-            val quantity = Integer.parseInt(editTextQuantity.text.toString())
-            val difficulty = spinnerDifficulty.selectedItem.toString()
-            val category = spinnerCategory.selectedItem.toString()
-            val intent = Intent(this, QuizActivity::class.java).apply {
-                putExtra(EXTRA_QUANTITY, quantity)
-                putExtra(EXTRA_DIFFICULTY, difficulty)
-                putExtra(EXTRA_CATEGORY, category)
+    private fun findCategoryId(categoryName: String, categories: List<Category>): Long {
+        for (category in categories) {
+            if (category.name.equals(categoryName)) {
+                return category.id!!
             }
-            startActivity(intent)
         }
+        return 0
     }
 }

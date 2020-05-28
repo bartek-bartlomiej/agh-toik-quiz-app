@@ -46,6 +46,5 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:text="@string/button_start"
-        android:background="@color/helper"
-        android:onClick="startQuiz"/>
+        android:background="@color/helper"/>
 </RelativeLayout>
