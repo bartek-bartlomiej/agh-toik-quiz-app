@@ -21,12 +21,17 @@ class QuizActivity : AppCompatActivity() {
         setContentView(R.layout.activity_quiz)
         val quantity = intent.getIntExtra(EXTRA_QUANTITY, 5)
         val difficulty = Difficulty.valueOf(intent.getStringExtra(EXTRA_DIFFICULTY)!!)
-        val category = intent.getLongExtra(EXTRA_CATEGORY, 0)
-        val questions = QuizApi().getQuizQuestions(quantity, difficulty, category)
+        val categoryId = intent.getLongExtra(EXTRA_CATEGORY, 0)
+        val questions = getQuestions(quantity, difficulty, categoryId)
+        checkQuestionsPresence(questions)
         start(questions)
     }
 
-    private fun start(questions: Array<Question>) {
+    private fun getQuestions(quantity: Int, difficulty: Difficulty, categoryId: Long): Array<Question> {
+        return QuizApi().getQuizQuestions(quantity, difficulty, categoryId)
+    }
+
+    private fun checkQuestionsPresence(questions: Array<Question>) {
         if (questions.isEmpty()) {
             AlertDialog.Builder(this)
                 .setTitle("No such questions")
@@ -37,17 +42,19 @@ class QuizActivity : AppCompatActivity() {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show()
         }
+    }
+
+    private fun start(questions: Array<Question>) {
         val statistics = Statistics()
         val iterator = questions.iterator()
         if (iterator.hasNext()) {
             ask(iterator.next(), statistics)
         }
         buttonNext.setOnClickListener {
-            if (iterator.hasNext()) {
-                ask(iterator.next(), statistics)
-            } else {
+            if (!iterator.hasNext()) {
                 startStatisticsActivity(statistics);
             }
+            ask(iterator.next(), statistics)
         }
     }
 

@@ -3,6 +3,7 @@ package pl.edu.agh.toik.quizapp
 import android.content.Intent
 import android.os.Bundle
 import android.os.StrictMode
+import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -26,25 +27,27 @@ class MainActivity : AppCompatActivity() {
         val categories = CategoriesApi().getCategories().toList()
         val categoriesNames = categories.map{it.name!!}
         spinnerCategory.attachDataSource(categoriesNames)
-        buttonStart.setOnClickListener {
-            val spinnerCategory = findViewById<NiceSpinner>(R.id.spinnerCategory)
-            val editTextQuantity = findViewById<EditText>(R.id.editTextQuantity)
-            val spinnerDifficulty = findViewById<NiceSpinner>(R.id.spinnerDifficulty)
-            if (editTextQuantity.text.isEmpty()) {
-                editTextQuantity.error = "Quantity is required"
-            } else {
-                val quantity = Integer.parseInt(editTextQuantity.text.toString())
-                val difficulty = spinnerDifficulty.selectedItem.toString()
-                val categoryName = spinnerCategory.selectedItem.toString()
-                val categoryId = findCategoryId(categoryName, categories)
-                val intent = Intent(this, QuizActivity::class.java).apply {
-                    putExtra(EXTRA_QUANTITY, quantity)
-                    putExtra(EXTRA_DIFFICULTY, difficulty)
-                    putExtra(EXTRA_CATEGORY, categoryId)
-                }
-                startActivity(intent)
-            }
+        buttonStart.setOnClickListener { startQuiz(it, categories) }
+    }
+
+    private fun startQuiz(view: View, categories: List<Category>) {
+        val spinnerCategory = findViewById<NiceSpinner>(R.id.spinnerCategory)
+        val editTextQuantity = findViewById<EditText>(R.id.editTextQuantity)
+        val spinnerDifficulty = findViewById<NiceSpinner>(R.id.spinnerDifficulty)
+        if (editTextQuantity.text.isEmpty()) {
+            editTextQuantity.error = "Quantity is required"
+            return
         }
+        val quantity = Integer.parseInt(editTextQuantity.text.toString())
+        val difficulty = spinnerDifficulty.selectedItem.toString()
+        val categoryName = spinnerCategory.selectedItem.toString()
+        val categoryId = findCategoryId(categoryName, categories)
+        val intent = Intent(this, QuizActivity::class.java).apply {
+            putExtra(EXTRA_QUANTITY, quantity)
+            putExtra(EXTRA_DIFFICULTY, difficulty)
+            putExtra(EXTRA_CATEGORY, categoryId)
+        }
+        startActivity(intent)
     }
 
     private fun findCategoryId(categoryName: String, categories: List<Category>): Long {
