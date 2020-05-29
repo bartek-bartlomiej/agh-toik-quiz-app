@@ -53,6 +53,7 @@ class QuizActivity : AppCompatActivity() {
         buttonNext.setOnClickListener {
             if (!iterator.hasNext()) {
                 startStatisticsActivity(statistics);
+                return@setOnClickListener
             }
             ask(iterator.next(), statistics)
         }
