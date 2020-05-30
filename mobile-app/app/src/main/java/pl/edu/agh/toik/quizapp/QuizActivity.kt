@@ -1,15 +1,14 @@
 package pl.edu.agh.toik.quizapp
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import kotlinx.android.synthetic.main.activity_quiz.*
-import pl.edu.agh.toik.quizapp.api.QuizApi
-import pl.edu.agh.toik.quizapp.model.Difficulty
 import pl.edu.agh.toik.quizapp.model.Question
 
 const val EXTRA_STATISTICS = "pl.edu.agh.toik.quizapp.STATISTICS"
@@ -19,29 +18,10 @@ class QuizActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz)
-        val quantity = intent.getIntExtra(EXTRA_QUANTITY, 5)
-        val difficulty = Difficulty.valueOf(intent.getStringExtra(EXTRA_DIFFICULTY)!!)
-        val categoryId = intent.getLongExtra(EXTRA_CATEGORY, 0)
-        val questions = getQuestions(quantity, difficulty, categoryId)
-        checkQuestionsPresence(questions)
+        val questionsString = intent.getStringExtra(EXTRA_QUESTIONS)!!
+        val mapper = jacksonObjectMapper()
+        val questions: Array<Question> = mapper.readValue(questionsString)
         start(questions)
-    }
-
-    private fun getQuestions(quantity: Int, difficulty: Difficulty, categoryId: Long): Array<Question> {
-        return QuizApi().getQuizQuestions(quantity, difficulty, categoryId)
-    }
-
-    private fun checkQuestionsPresence(questions: Array<Question>) {
-        if (questions.isEmpty()) {
-            AlertDialog.Builder(this)
-                .setTitle("No such questions")
-                .setMessage("We could not find questions for specified category and difficulty")
-                .setPositiveButton(android.R.string.yes) {
-                        _, _ -> navigateUpTo(Intent(baseContext, MainActivity::class.java))
-                }
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show()
-        }
     }
 
     private fun start(questions: Array<Question>) {

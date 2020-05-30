@@ -1,20 +1,22 @@
 package pl.edu.agh.toik.quizapp
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.StrictMode
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import kotlinx.android.synthetic.main.activity_main.*
 import org.angmarch.views.NiceSpinner
 import pl.edu.agh.toik.quizapp.api.CategoriesApi
+import pl.edu.agh.toik.quizapp.api.QuizApi
 import pl.edu.agh.toik.quizapp.model.Category
 import pl.edu.agh.toik.quizapp.model.Difficulty
+import pl.edu.agh.toik.quizapp.model.Question
 
-const val EXTRA_CATEGORY = "pl.edu.agh.toik.quizapp.CATEGORY"
-const val EXTRA_QUANTITY = "pl.edu.agh.toik.quizapp.QUANTITY"
-const val EXTRA_DIFFICULTY = "pl.edu.agh.toik.quizapp.DIFFICULTY"
+const val EXTRA_QUESTIONS = "pl.edu.agh.toik.quizapp.QUESTIONS"
 
 class MainActivity : AppCompatActivity() {
 
@@ -39,15 +41,33 @@ class MainActivity : AppCompatActivity() {
             return
         }
         val quantity = Integer.parseInt(editTextQuantity.text.toString())
-        val difficulty = spinnerDifficulty.selectedItem.toString()
+        val difficulty = Difficulty.valueOf(spinnerDifficulty.selectedItem.toString())
         val categoryName = spinnerCategory.selectedItem.toString()
         val categoryId = findCategoryId(categoryName, categories)
+        val questions = getQuestions(quantity, difficulty, categoryId)
+        if (questions.isEmpty()) {
+            showNoQuestionsDialog()
+            return
+        }
+        val mapper = jacksonObjectMapper()
+        val questionsString = mapper.writeValueAsString(questions)
         val intent = Intent(this, QuizActivity::class.java).apply {
-            putExtra(EXTRA_QUANTITY, quantity)
-            putExtra(EXTRA_DIFFICULTY, difficulty)
-            putExtra(EXTRA_CATEGORY, categoryId)
+            putExtra(EXTRA_QUESTIONS, questionsString)
         }
         startActivity(intent)
+    }
+
+    private fun getQuestions(quantity: Int, difficulty: Difficulty, categoryId: Long): Array<Question> {
+        return QuizApi().getQuizQuestions(quantity, difficulty, categoryId)
+    }
+
+    private fun showNoQuestionsDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("No such questions")
+            .setMessage("We could not find questions for specified category and difficulty")
+            .setPositiveButton(android.R.string.yes) { _, _ -> }
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .show()
     }
 
     private fun findCategoryId(categoryName: String, categories: List<Category>): Long {
