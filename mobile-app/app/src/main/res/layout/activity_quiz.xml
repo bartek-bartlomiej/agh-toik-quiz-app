@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp" >
+    <TextView
+        android:id="@+id/textViewQuestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:gravity="center"
+        android:textSize="25sp"/>
+
+    <ListView
+        android:id="@+id/listViewQuestions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/buttonNext"/>
+
+    <Button
+        android:id="@+id/buttonNext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/helper"
+        android:text="@string/button_next"/>
+</RelativeLayout>
