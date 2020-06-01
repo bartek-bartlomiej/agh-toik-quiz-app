@@ -23,7 +23,7 @@ services:
      container_name: "toik-front"
      image: httpd:2.4
      volumes:
-       - ./frontend/dist/:/usr/local/apache2/htdocs/
+       - ./web-app/dist/:/usr/local/apache2/htdocs/
        - ./custom-httpd.conf:/usr/local/apache2/conf/httpd.conf
      ports:
        - "8081:80"

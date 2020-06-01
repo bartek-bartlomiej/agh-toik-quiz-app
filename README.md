@@ -2,19 +2,20 @@
 
 Projekt z przedmiotu: Techniki komponentowe
 
-Autorzy: Michał Śledź, Bartłomiej Stępień, Ludwik Ciechański
+Autorzy: Ludwik Ciechański, Bartłomiej Stępień, Michał Śledź
 
 ## Docker-compose local setup
 
-1. Turn off existing MongoDB to have port 27017 free.
-2. In backend catalog:
-- package .jar file: `mvn clean package`
-- make sure that .jar name is the same as in `docker-compose.yml`
-- check `spring.data.mongodb.host` in `application.properties`
-3. In frontend catalog:
-- TODO
-4. In project root:
-- run all containers: `docker-compose up` (add `-d` to start them in detached mode)
+1. Asure that port `270171` is free (turn off existing MongoDB if needed)
+2. In `backend` catalog:
+    - package .jar file: `mvn clean package`
+    - make sure that .jar name is the same as in `docker-compose.yml`
+    - check `spring.data.mongodb.host` value in `application.properties`
+3. In `web-app` catalog:
+    - build app: `npm install && npm run build`
+    - make sure that created folder name is the same as in `docker-compose.yml`
+4. In `/` project root:
+    - run all containers: `docker-compose up` (add `-d` to start them in detached mode)
 
 ## Remote server (AWS EC2)
 
