@@ -1,0 +1,34 @@
+@startuml "system-scheme"
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/release/1-0/C4_Container.puml
+
+LAYOUT_TOP_DOWN
+LAYOUT_WITH_LEGEND()
+
+Person(player, "Player", "A user of Quiz! Application")
+System_Boundary(c1, "Quiz! Software system") {
+    Container(web_server, "Web Application", "Apache", "Delivers the quiz single page application")
+    Container(web_app, "Single-Page Application", "JavaScript, VueJs", "Provides all functionality\n(game, managment) to player via their web browser.")
+    Container(mobile_app, "Mobile Application", "Kotlin, Android", "Provides game functionality to player via their mobile device with Android.")
+
+    Container(api_app, "API Application", "Java, Spring", "Provides questions quering and managing via\na JSON/HTTP API.")
+
+    ContainerDb(mongodb, "Database", "MongoDB", "Stores questions and categories")
+
+    'Container(data_broker, "Data broker", "???", "Pulls periodically questions from external source")
+}
+'System_Ext(some_system, "Online question database system", "Provides quering questions")
+
+Rel(player, web_server, "Visit [URL:8081] using", "HTTP")
+Rel(player, web_app, "Play quizes and manage question using")
+Rel(player, mobile_app, "Play quizes using")
+
+Rel_R(web_server, web_app, "Delivers to player's web browser")
+
+Rel(web_app, api_app, "Make API calls to", "JSON/HTTP")
+Rel(mobile_app, api_app, "Make API calls to", "JSON/HTTP")
+
+Rel_L(api_app, mongodb, "Reads from and writes to", "Socket/TCP")
+'Rel_R(data_broker, mongodb, "Writes to", "Socket/TCP")
+
+'Rel_L(data_broker, some_system, "Makes API calls to", "JSON/HTTP")
+@enduml

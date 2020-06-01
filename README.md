@@ -4,6 +4,9 @@ Projekt z przedmiotu: Techniki komponentowe
 
 Autorzy: Ludwik Ciechański, Bartłomiej Stępień, Michał Śledź
 
+## Documentation
+For generating system scheme, see [C4-PlantUML](https://github.com/RicardoNiepel/C4-PlantUML).
+
 ## Docker-compose local setup
 
 1. Asure that port `270171` is free (turn off existing MongoDB if needed)
