@@ -56,7 +56,7 @@ export default {
     }
   },
   watch: {
-    'questionData.ordinal' () {
+    ordinal () {
       this.answered = false
       this.chosenAnswer = undefined
     }
