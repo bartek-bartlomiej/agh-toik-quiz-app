@@ -14,9 +14,9 @@ System_Boundary(c1, "Quiz! Software system") {
 
     ContainerDb(mongodb, "Database", "MongoDB", "Stores questions and categories")
 
-    'Container(data_broker, "Data broker", "???", "Pulls periodically questions from external source")
+    Container(data_broker, "Data broker", "Java, Spring", "Pulls periodically questions from external source")
 }
-'System_Ext(some_system, "Online question database system", "Provides quering questions")
+System_Ext(trivia, "Open Trivia Database", "Provides questions")
 
 Rel(player, web_server, "Visit [URL:8081] using", "HTTP")
 Rel(player, web_app, "Play quizes and manage question using")
@@ -28,7 +28,7 @@ Rel(web_app, api_app, "Make API calls to", "JSON/HTTP")
 Rel(mobile_app, api_app, "Make API calls to", "JSON/HTTP")
 
 Rel_L(api_app, mongodb, "Reads from and writes to", "Socket/TCP")
-'Rel_R(data_broker, mongodb, "Writes to", "Socket/TCP")
+Rel_R(data_broker, mongodb, "Writes to", "Socket/TCP")
 
-'Rel_L(data_broker, some_system, "Makes API calls to", "JSON/HTTP")
+Rel(data_broker, trivia, "Makes API calls to", "JSON/HTTP")
 @enduml
