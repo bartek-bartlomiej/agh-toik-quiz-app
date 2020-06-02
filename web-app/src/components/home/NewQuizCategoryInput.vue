@@ -20,21 +20,18 @@
 <script>
 import { loadingMixin } from '@/mixin/loadingMixin'
 
-const loadingCategoriesMixin = loadingMixin({
-  operationName: 'getCategories',
-  consoleError: 'Could not get categories',
-  toastMessage: 'Could not display categories',
-  shouldRetry: true
-})
-
 export default {
   name: 'NewQuizCategoryInput',
-  mixins: [loadingCategoriesMixin],
+  mixins: [loadingMixin],
   props: {
     value: Number
   },
   data: function () {
     return {
+      operationName: 'getCategories',
+      shouldRetry: true,
+      consoleErrorMessage: 'Could not get categories',
+      toastErrorMessage: 'Could not display categories',
       currentValue: this.value
     }
   },

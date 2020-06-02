@@ -1,20 +1,15 @@
 import client from '@/api'
 
-export const loadingMixin = ({
-  operationName,
-  consoleError = 'Could not get data',
-  toastMessage = 'Could not get data',
-  shouldRetry = false,
-  retryTime
-}) => ({
+export const loadingMixin = {
   data: function () {
     return {
       loading: false,
       externalData: undefined,
-      operationName: operationName,
-      retryTime: shouldRetry ? (retryTime || 5000) : -1,
-      consoleError: consoleError,
-      toastMessage: toastMessage
+      operationName: undefined,
+      shouldRetry: false,
+      retryTime: 5000,
+      consoleErrorMessage: 'Could not get data',
+      toastErrorMessage: 'Could not get data'
     }
   },
   computed: {
@@ -27,8 +22,11 @@ export const loadingMixin = ({
       }
       return client[this.operationName]
     },
-    shouldRetry () {
-      return this.retryTime >= 0
+    operationParams () {
+      return null
+    },
+    operationData () {
+      return null
     },
     secondsQuantity () {
       const seconds = Math.round(this.retryTime / 1000)
@@ -36,19 +34,18 @@ export const loadingMixin = ({
     }
   },
   methods: {
-    loadData (params = null, data = null, opts = null) {
+    loadData () {
       this.loading = true
-      const operationMethod = this.operationMethod
-      operationMethod(params, data, opts)
+      this.operationMethod(this.operationParams, this.operationData)
         .then(response => {
           this.externalData = response.data
           this.loading = false
         })
         .catch(error => {
-          console.error(`${this.consoleError}: ${error.toString()}`)
+          console.error(`${this.consoleErrorMessage}: ${error.toString()}`)
           this.$buefy.toast.open({
             duration: 3000,
-            message: `${this.toastMessage}${this.shouldRetry ? `. Will try again in ${this.secondsQuantity}` : '…'}`,
+            message: `${this.toastErrorMessage}${this.shouldRetry ? `. Will try again in ${this.secondsQuantity}` : '…'}`,
             position: 'is-bottom',
             type: 'is-warning'
           })
@@ -58,4 +55,4 @@ export const loadingMixin = ({
         })
     }
   }
-})
+}

@@ -50,23 +50,29 @@ const colors = {
   hard: 'is-danger'
 }
 
-const loadingQuestionsMixin = loadingMixin({
-  operationName: 'getQuestions',
-  consoleError: 'Could not get questions',
-  toastMessage: 'Could not display questions',
-  shouldRetry: true
-})
-
 export default {
   name: 'CategoryQuestionsTable',
-  mixins: [loadingQuestionsMixin],
+  mixins: [loadingMixin],
   props: {
     categoryId: {
       type: Number,
       required: true
     }
   },
+  data: function () {
+    return {
+      operationName: 'getQuestions',
+      shouldRetry: true,
+      consoleErrorMessage: 'Could not get questions',
+      toastErrorMessage: 'Could not display questions'
+    }
+  },
   computed: {
+    operationParams () {
+      return {
+        category: this.categoryId
+      }
+    },
     questions () {
       return this.externalData !== undefined ? this.externalData : []
     },
@@ -88,9 +94,7 @@ export default {
     }
   },
   created () {
-    this.loadData({
-      category: this.categoryId
-    })
+    this.loadData()
   }
 }
 </script>

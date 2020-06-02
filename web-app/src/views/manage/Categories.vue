@@ -53,19 +53,16 @@ import CategorySummary from '@/components/manage/categories/CategorySummary'
 import CategorySummarySkeleton from '@/components/manage/categories/CategorySummarySkeleton'
 import { loadingMixin } from '@/mixin/loadingMixin'
 
-const loadingCategoryMixin = loadingMixin({
-  operationName: 'getCategories',
-  consoleError: 'Could not get categories',
-  toastMessage: 'Could not display categories',
-  shouldRetry: true
-})
-
 export default {
   name: 'Categories',
   components: { CategorySummarySkeleton, NewCategoryForm, CategorySummary },
-  mixins: [loadingCategoryMixin],
+  mixins: [loadingMixin],
   data: function () {
     return {
+      operationName: 'getCategories',
+      shouldRetry: true,
+      consoleErrorMessage: 'Could not get categories',
+      toastErrorMessage: 'Could not display categories',
       isNewCategoryModalVisible: false
     }
   },
