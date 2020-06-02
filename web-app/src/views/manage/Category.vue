@@ -9,7 +9,13 @@
         </div>
         <div class="level-right">
           <div class="level-item">
-            <b-button type="is-danger" outlined>Delete</b-button>
+            <b-button
+              type="is-danger"
+              outlined
+              @click="confirmDelete"
+            >
+              Delete
+            </b-button>
           </div>
           <div class="level-item">
             <b-button type="is-primary" outlined>Edit</b-button>
@@ -53,14 +59,25 @@ export default {
   methods: {
     saveCategories (categories) {
       this.categories = categories
+    },
+    confirmDelete () {
+      this.$buefy.dialog.confirm({
+        title: 'Deleting category',
+        message: 'Are you sure you want to <strong>delete</strong> this category?',
+        confirmText: 'Delete category',
+        type: 'is-danger',
+        hasIcon: true,
+        iconPack: 'fa',
+        onConfirm: () => console.log('TODO delete :o)')
+      })
     }
   },
   beforeRouteEnter (to, from, next) {
-    const category = CategoryDTO.parseParameters(to.params)
+    const categoryDTO = CategoryDTO.parseParameters(to.params)
     client.getCategories()
       .then(response => {
         const categories = response.data
-        if (!category.isValid(categories)) {
+        if (!categoryDTO.isValid(categories)) {
           if (from.name === null) {
             next({ name: 'Home', replace: true })
             return
