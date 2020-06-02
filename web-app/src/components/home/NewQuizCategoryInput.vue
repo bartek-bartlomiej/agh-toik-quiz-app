@@ -1,7 +1,7 @@
 <template>
   <b-field grouped position="is-centered">
     <b-select
-      placeholder="Select a category"
+      :placeholder="loading ? 'Loading categories…' : 'Select a category'"
       :loading="loading"
       :disabled="categories.length === 0"
       v-model="currentValue"
@@ -18,42 +18,39 @@
 </template>
 
 <script>
-import client from '@/api'
+import { loadingMixin } from '@/mixin/loadingMixin'
+
+const loadingCategoryMixin = loadingMixin({
+  operation: {
+    name: 'getCategories'
+  },
+  consoleError: 'Could not get categories',
+  toastMessage: 'Could not display categories',
+  shouldRetry: true
+})
 
 export default {
   name: 'HomeNewQuizCategoryInput',
+  mixins: [loadingCategoryMixin],
   props: {
     value: Number
   },
   data: function () {
     return {
-      currentValue: this.value,
-      loading: true,
-      categories: []
+      currentValue: this.value
     }
   },
-  methods: {
-    loadCategories () {
-      this.loading = true
-      client.getCategories()
-        .then(response => {
-          this.categories = response.data
-          this.loading = false
-        })
-        .catch(error => {
-          console.error('Could not get categories: ' + error.toString())
-          this.$buefy.toast.open({
-            duration: 3000,
-            message: 'Could not display categories. Will try again in 5 seconds.',
-            position: 'is-bottom',
-            type: 'is-warning'
-          })
-          setTimeout(() => this.loadCategories(), 5000)
-        })
+  computed: {
+    categories () {
+      if (this.externalData === undefined) {
+        return []
+      }
+      return [...this.externalData]
+        .sort((one, other) => one.name.localeCompare(other.name))
     }
   },
   mounted () {
-    this.loadCategories()
+    this.loadData()
   }
 }
 </script>

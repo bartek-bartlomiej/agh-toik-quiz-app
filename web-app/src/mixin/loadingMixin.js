@@ -34,7 +34,7 @@ export const loadingMixin = ({
       return this.retryTime >= 0
     },
     secondsQuantity () {
-      const seconds = (this.retryTime / 1000).toFixed(1)
+      const seconds = Math.round(this.retryTime / 1000)
       return `${seconds} second${this.retryTime === 0 || seconds > 1 ? 's' : ''}`
     }
   },
