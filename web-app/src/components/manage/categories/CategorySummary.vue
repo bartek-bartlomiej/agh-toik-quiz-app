@@ -31,6 +31,8 @@
 </template>
 
 <script>
+import { CategoryDTO } from '../../../api/model'
+
 export default {
   name: 'CategorySummary',
   props: {
@@ -50,7 +52,8 @@ export default {
   },
   methods: {
     goToCategoryView () {
-      this.$router.push({ name: 'Category', params: { id: this.id.toString() } },
+      const categoryDTO = new CategoryDTO(this.id)
+      this.$router.push({ name: 'Category', params: categoryDTO.toParameters() },
         () => {},
         error => {
           this.$buefy.toast.open({
