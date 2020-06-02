@@ -29,7 +29,30 @@ class QuizQueryDTO {
   }
 }
 
+class CategoryDTO {
+  constructor (categoryId) {
+    this.id = categoryId
+  }
+
+  isValid (categories) {
+    return typeof this.id === 'number' &&
+      categories.map(category => category.id).includes(this.id)
+  }
+
+  toParameters () {
+    return {
+      id: this.id.toString()
+    }
+  }
+
+  static parseParameters (params) {
+    const id = Number(params.id)
+    return new CategoryDTO(id)
+  }
+}
+
 export {
   Difficulty,
-  QuizQueryDTO
+  QuizQueryDTO,
+  CategoryDTO
 }

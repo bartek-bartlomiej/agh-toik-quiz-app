@@ -4,7 +4,7 @@
       <nav class="level">
         <div class="level-left">
           <div class="level-item">
-            <h1 class="title">Category {{ id }}</h1>
+            <h1 class="title">Category {{ name }}</h1>
           </div>
         </div>
         <div class="level-right">
@@ -63,6 +63,9 @@
 </template>
 
 <script>
+import client from '@/api'
+import { CategoryDTO } from '@/api/model'
+
 const colors = {
   easy: 'is-success',
   medium: 'is-warning',
@@ -85,16 +88,50 @@ export default {
         { id: 3, difficulty: 'hard', question: 'Ala has...', answer: 'cat' },
         { id: 4, difficulty: 'hard', question: 'Q1', answer: 'A1' },
         { id: 5, difficulty: 'medium', question: 'Q2', answer: 'A2' }
-      ]
+      ],
+      categories: []
+    }
+  },
+  computed: {
+    name () {
+      const category = this.categories.find(category => category.id === this.id)
+      return category !== undefined ? category.name : undefined
     }
   },
   methods: {
+    saveCategories (categories) {
+      this.categories = categories
+    },
     capitalize ([initial, ...rest]) {
       return [initial.toUpperCase(), ...rest].join('')
     },
     difficultyColor (difficulty) {
       return colors[difficulty]
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    const category = CategoryDTO.parseParameters(to.params)
+    client.getCategories()
+      .then(response => {
+        const categories = response.data
+        if (!category.isValid(categories)) {
+          if (from.name === null) {
+            next({ name: 'Home', replace: true })
+            return
+          }
+          next(Error('Category not found'))
+          return
+        }
+        next(vm => vm.saveCategories(categories))
+      })
+      .catch(error => {
+        console.error('Could not get categories: ' + error.toString())
+        if (from.name === null) {
+          next({ name: 'Home', replace: true })
+          return
+        }
+        next(Error('Could not get categories from server'))
+      })
   }
 }
 </script>
