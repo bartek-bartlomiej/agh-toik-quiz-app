@@ -48,50 +48,46 @@
 </template>
 
 <script>
-import client from '../api'
 import NewCategoryForm from '../components/categories/NewCategoryForm'
 import CategorySummary from '../components/categories/CategorySummary'
 import CategorySummarySkeleton from '../components/categories/CategorySummarySkeleton'
+import { loadingMixin } from '../mixin/loadingMixin'
+
+const loadingCategoryMixin = loadingMixin({
+  operation: {
+    name: 'getCategories'
+  },
+  consoleError: 'Could not get categories',
+  toastMessage: 'Could not display categories',
+  shouldRetry: true
+})
 
 export default {
   name: 'Categories',
   components: { CategorySummarySkeleton, NewCategoryForm, CategorySummary },
+  mixins: [loadingCategoryMixin],
   data: function () {
     return {
-      isNewCategoryModalVisible: false,
-      loading: true,
-      categorySummaries: []
+      isNewCategoryModalVisible: false
     }
   },
   computed: {
+    categorySummaries () {
+      if (this.externalData === undefined) {
+        return []
+      }
+      return [...this.externalData]
+        .map(category => ({
+          ...category,
+          quantity: NaN
+        }))
+    },
     sortedSummaries () {
       return [...this.categorySummaries]
         .sort((one, other) => one.name.localeCompare(other.name))
     }
   },
   methods: {
-    loadCategories () {
-      this.loading = true
-      client.getCategories()
-        .then(response => {
-          this.categorySummaries = response.data
-            .map(category => ({
-              ...category,
-              quantity: NaN
-            }))
-          this.loading = false
-        })
-        .catch(error => {
-          console.error('Could not get categories: ' + error.toString())
-          this.$buefy.toast.open({
-            duration: 3000,
-            message: 'Could not display categories. Will try again in 5 seconds.',
-            position: 'is-bottom',
-            type: 'is-warning'
-          })
-          setTimeout(() => this.loadCategories(), 5000)
-        })
-    },
     handleCategoryAdded (category) {
       this.categorySummaries.push({
         ...category,
@@ -100,7 +96,7 @@ export default {
     }
   },
   mounted () {
-    this.loadCategories()
+    this.loadData()
   }
 }
 </script>
