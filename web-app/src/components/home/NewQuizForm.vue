@@ -21,13 +21,13 @@
 </template>
 
 <script>
-import QuizCategoryInput from './NewQuizCategoryInput'
-import QuizDifficultyInput from './NewQuizDifficultyInput'
-import QuizQuantityInput from './NewQuizQuantityInput'
+import QuizCategoryInput from '@/components/home/NewQuizCategoryInput'
+import QuizDifficultyInput from '@/components/home/NewQuizDifficultyInput'
+import QuizQuantityInput from '@/components/home/NewQuizQuantityInput'
 import { Difficulty, QuizQueryDTO } from '@/api/model'
 
 export default {
-  name: 'HomeQuizParametersForm',
+  name: 'QuizParametersForm',
   components: { QuizQuantityInput, QuizCategoryInput, QuizDifficultyInput },
   data: function () {
     return {

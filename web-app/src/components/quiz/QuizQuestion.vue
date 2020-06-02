@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import AnswerButton from './QuizQuestionAnswerButton'
+import AnswerButton from '@/components/quiz/QuizQuestionAnswerButton'
 
 export default {
   name: 'Question',

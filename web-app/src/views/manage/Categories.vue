@@ -48,9 +48,9 @@
 </template>
 
 <script>
-import NewCategoryForm from '@/components/categories/NewCategoryForm'
-import CategorySummary from '@/components/categories/CategorySummary'
-import CategorySummarySkeleton from '@/components/categories/CategorySummarySkeleton'
+import NewCategoryForm from '@/components/manage/categories/NewCategoryForm'
+import CategorySummary from '@/components/manage/categories/CategorySummary'
+import CategorySummarySkeleton from '@/components/manage/categories/CategorySummarySkeleton'
 import { loadingMixin } from '@/mixin/loadingMixin'
 
 const loadingCategoryMixin = loadingMixin({

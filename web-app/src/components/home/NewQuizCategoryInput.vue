@@ -28,7 +28,7 @@ const loadingCategoriesMixin = loadingMixin({
 })
 
 export default {
-  name: 'HomeNewQuizCategoryInput',
+  name: 'NewQuizCategoryInput',
   mixins: [loadingCategoriesMixin],
   props: {
     value: Number

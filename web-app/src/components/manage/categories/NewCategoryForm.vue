@@ -24,10 +24,10 @@
 </template>
 
 <script>
-import client from '../../api'
+import client from '../../../api'
 
 export default {
-  name: 'new-category-form',
+  name: 'NewCategoryForm',
   data: function () {
     return {
       name: ''

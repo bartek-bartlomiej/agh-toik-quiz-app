@@ -32,7 +32,7 @@
 
 <script>
 export default {
-  name: 'category-summary',
+  name: 'CategorySummary',
   props: {
     id: Number,
     name: String,
