@@ -48,15 +48,13 @@
 </template>
 
 <script>
-import NewCategoryForm from '../components/categories/NewCategoryForm'
-import CategorySummary from '../components/categories/CategorySummary'
-import CategorySummarySkeleton from '../components/categories/CategorySummarySkeleton'
-import { loadingMixin } from '../mixin/loadingMixin'
+import NewCategoryForm from '@/components/categories/NewCategoryForm'
+import CategorySummary from '@/components/categories/CategorySummary'
+import CategorySummarySkeleton from '@/components/categories/CategorySummarySkeleton'
+import { loadingMixin } from '@/mixin/loadingMixin'
 
 const loadingCategoryMixin = loadingMixin({
-  operation: {
-    name: 'getCategories'
-  },
+  operationName: 'getCategories',
   consoleError: 'Could not get categories',
   toastMessage: 'Could not display categories',
   shouldRetry: true

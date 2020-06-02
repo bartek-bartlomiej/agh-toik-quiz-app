@@ -19,45 +19,8 @@
           </div>
         </div>
       </nav>
-        <b-table
-          :data="data"
-          striped
-          hoverable>
-          <template slot-scope="props">
-            <b-table-column field="id" label="ID" width="4%" centered numeric>
-              {{ props.row.id }}
-            </b-table-column>
-
-            <b-table-column field="question" label="Question" width="32%">
-              {{ props.row.question }}
-            </b-table-column>
-
-            <b-table-column field="answer" label="Answer" width="32%">
-              {{ props.row.answer }}
-            </b-table-column>
-
-            <b-table-column field="difficulty" label="Difficulty" width="32%" centered>
-              <span :class="['tag', difficultyColor(props.row.difficulty)]">
-                  {{ capitalize(props.row.difficulty) }}
-              </span>
-            </b-table-column>
-          </template>
-          <template slot="empty">
-            <section class="section">
-              <div class="content has-text-grey has-text-centered">
-                <p>
-                  <b-icon
-                    pack="fa"
-                    icon="pencil-ruler"
-                    size="is-large">
-                  </b-icon>
-                </p>
-                <p>Nothing here.</p>
-                <a>Add new question</a>
-              </div>
-            </section>
-          </template>
-        </b-table>
+      <questions-table
+        :category-id="id" />
     </div>
   </div>
 </template>
@@ -65,15 +28,11 @@
 <script>
 import client from '@/api'
 import { CategoryDTO } from '@/api/model'
-
-const colors = {
-  easy: 'is-success',
-  medium: 'is-warning',
-  hard: 'is-danger'
-}
+import QuestionsTable from '@/components/manage/category/CategoryQuestionsTable'
 
 export default {
   name: 'Category',
+  components: { QuestionsTable },
   props: {
     id: {
       type: Number,
@@ -82,13 +41,6 @@ export default {
   },
   data () {
     return {
-      data: [
-        { id: 1, difficulty: 'easy', question: '2+2=?', answer: '4' },
-        { id: 2, difficulty: 'medium', question: 'Best hero', answer: 'Shaggy' },
-        { id: 3, difficulty: 'hard', question: 'Ala has...', answer: 'cat' },
-        { id: 4, difficulty: 'hard', question: 'Q1', answer: 'A1' },
-        { id: 5, difficulty: 'medium', question: 'Q2', answer: 'A2' }
-      ],
       categories: []
     }
   },
@@ -101,12 +53,6 @@ export default {
   methods: {
     saveCategories (categories) {
       this.categories = categories
-    },
-    capitalize ([initial, ...rest]) {
-      return [initial.toUpperCase(), ...rest].join('')
-    },
-    difficultyColor (difficulty) {
-      return colors[difficulty]
     }
   },
   beforeRouteEnter (to, from, next) {

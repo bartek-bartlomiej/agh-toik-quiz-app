@@ -20,10 +20,8 @@
 <script>
 import { loadingMixin } from '@/mixin/loadingMixin'
 
-const loadingCategoryMixin = loadingMixin({
-  operation: {
-    name: 'getCategories'
-  },
+const loadingCategoriesMixin = loadingMixin({
+  operationName: 'getCategories',
   consoleError: 'Could not get categories',
   toastMessage: 'Could not display categories',
   shouldRetry: true
@@ -31,7 +29,7 @@ const loadingCategoryMixin = loadingMixin({
 
 export default {
   name: 'HomeNewQuizCategoryInput',
-  mixins: [loadingCategoryMixin],
+  mixins: [loadingCategoriesMixin],
   props: {
     value: Number
   },

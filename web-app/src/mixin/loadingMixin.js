@@ -1,7 +1,7 @@
 import client from '@/api'
 
 export const loadingMixin = ({
-  operation: { name, params, data = null, opts = null },
+  operationName,
   consoleError = 'Could not get data',
   toastMessage = 'Could not get data',
   shouldRetry = false,
@@ -11,10 +11,7 @@ export const loadingMixin = ({
     return {
       loading: false,
       externalData: undefined,
-      operationName: name,
-      operationParams: params,
-      operationData: data,
-      operationOpts: opts,
+      operationName: operationName,
       retryTime: shouldRetry ? (retryTime || 5000) : -1,
       consoleError: consoleError,
       toastMessage: toastMessage
@@ -39,10 +36,10 @@ export const loadingMixin = ({
     }
   },
   methods: {
-    loadData () {
+    loadData (params = null, data = null, opts = null) {
       this.loading = true
       const operationMethod = this.operationMethod
-      operationMethod(this.operationParams, this.operationData, this.operationOpts)
+      operationMethod(params, data, opts)
         .then(response => {
           this.externalData = response.data
           this.loading = false
