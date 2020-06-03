@@ -9,16 +9,22 @@
         </div>
         <div class="level-right">
           <div class="level-item">
-            <b-button
-              type="is-danger"
-              outlined
-              @click="confirmDelete"
-            >
-              Delete
-            </b-button>
+            <b-button type="is-danger" outlined @click="confirmDelete">Delete</b-button>
           </div>
           <div class="level-item">
-            <b-button type="is-primary" outlined>Edit</b-button>
+            <b-button type="is-primary" outlined @click="isCategoryModalVisible = true">Edit</b-button>
+            <b-modal
+              :active.sync="isCategoryModalVisible"
+              has-modal-card
+              trap-focus
+              destroy-on-hide
+            >
+              <category-form
+                :category-id="id"
+                :category-original-name="name"
+                mode="edit"
+                @data-changed="handleCategoryUpdated"/>
+            </b-modal>
           </div>
           <div class="level-item">
             <b-button type="is-primary">Add question</b-button>
@@ -32,13 +38,14 @@
 </template>
 
 <script>
+import CategoryForm from '@/components/manage/CategoryForm'
+import QuestionsTable from '@/components/manage/category/CategoryQuestionsTable'
 import client from '@/api'
 import { CategoryDTO } from '@/api/model'
-import QuestionsTable from '@/components/manage/category/CategoryQuestionsTable'
 
 export default {
   name: 'Category',
-  components: { QuestionsTable },
+  components: { CategoryForm, QuestionsTable },
   props: {
     id: {
       type: Number,
@@ -47,6 +54,7 @@ export default {
   },
   data () {
     return {
+      isCategoryModalVisible: false,
       categories: []
     }
   },
@@ -70,6 +78,13 @@ export default {
         iconPack: 'fa',
         onConfirm: () => console.log('TODO delete :o)')
       })
+    },
+    handleCategoryUpdated (updatedCategory) {
+      this.categories = this.categories.map(category =>
+        category.id === this.id
+          ? updatedCategory
+          : category
+      )
     }
   },
   beforeRouteEnter (to, from, next) {

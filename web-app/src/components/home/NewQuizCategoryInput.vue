@@ -1,14 +1,14 @@
 <template>
   <b-field grouped position="is-centered">
     <b-select
-      :placeholder="loading ? 'Loading categories…' : 'Select a category'"
-      :loading="loading"
+      :placeholder="pending ? 'Loading categories…' : 'Select a category'"
+      :loading="pending"
       :disabled="categories.length === 0"
       v-model="currentValue"
       @input="$emit('input', $event)"
     >
       <option
-        v-for="(option, index) in categories"
+        v-for="(option, index) in sortedCategories"
         :value="option.id"
         :key="index">
         {{ option.name }}
@@ -18,34 +18,41 @@
 </template>
 
 <script>
-import { loadingMixin } from '@/mixin/loadingMixin'
+import apiOperationMixin from '@/mixin/apiOperationMixin'
+
+const mixinData = {
+  operationName: 'getCategories',
+  shouldRetry: true,
+  consoleErrorMessage: 'Could not get categories',
+  toastErrorMessage: 'Could not display categories…'
+}
 
 export default {
   name: 'NewQuizCategoryInput',
-  mixins: [loadingMixin],
+  mixins: [apiOperationMixin],
   props: {
     value: Number
   },
   data: function () {
     return {
-      operationName: 'getCategories',
-      shouldRetry: true,
-      consoleErrorMessage: 'Could not get categories',
-      toastErrorMessage: 'Could not display categories',
-      currentValue: this.value
+      categories: [],
+      currentValue: this.value,
+      ...mixinData
     }
   },
   computed: {
-    categories () {
-      if (this.externalData === undefined) {
-        return []
-      }
-      return [...this.externalData]
+    sortedCategories () {
+      return [...this.categories]
         .sort((one, other) => one.name.localeCompare(other.name))
     }
   },
+  methods: {
+    handleOperationSucceeded (categories) {
+      this.categories = categories
+    }
+  },
   mounted () {
-    this.loadData()
+    this.performOperation()
   }
 }
 </script>

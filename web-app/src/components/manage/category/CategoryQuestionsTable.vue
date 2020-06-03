@@ -1,7 +1,7 @@
 <template>
   <b-table
     :data="questionSummaries"
-    :loading="loading"
+    :loading="pending"
     striped
     hoverable>
     <template slot-scope="props">
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { loadingMixin } from '@/mixin/loadingMixin'
+import apiOperationMixin from '@/mixin/apiOperationMixin'
 
 const colors = {
   easy: 'is-success',
@@ -50,9 +50,16 @@ const colors = {
   hard: 'is-danger'
 }
 
+const mixinData = {
+  operationName: 'getQuestions',
+  shouldRetry: true,
+  consoleErrorMessage: 'Could not get questions',
+  toastErrorMessage: 'Could not display questions…'
+}
+
 export default {
   name: 'CategoryQuestionsTable',
-  mixins: [loadingMixin],
+  mixins: [apiOperationMixin],
   props: {
     categoryId: {
       type: Number,
@@ -61,10 +68,8 @@ export default {
   },
   data: function () {
     return {
-      operationName: 'getQuestions',
-      shouldRetry: true,
-      consoleErrorMessage: 'Could not get questions',
-      toastErrorMessage: 'Could not display questions'
+      questions: [],
+      ...mixinData
     }
   },
   computed: {
@@ -72,9 +77,6 @@ export default {
       return {
         category: this.categoryId
       }
-    },
-    questions () {
-      return this.externalData !== undefined ? this.externalData : []
     },
     questionSummaries () {
       return this.questions.map((question, index) => ({
@@ -86,6 +88,9 @@ export default {
     }
   },
   methods: {
+    handleOperationSucceeded (questions) {
+      this.questions = questions
+    },
     difficultyColor (difficulty) {
       return colors[difficulty]
     },
@@ -94,7 +99,7 @@ export default {
     }
   },
   created () {
-    this.loadData()
+    this.performOperation()
   }
 }
 </script>

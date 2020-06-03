@@ -16,12 +16,14 @@
               trap-focus
               destroy-on-hide
             >
-              <new-category-form @category-added="handleCategoryAdded"/>
+              <category-form
+                mode="add"
+                @data-changed="handleCategoryAdded"/>
             </b-modal>
           </div>
         </div>
       </nav>
-        <template v-if="loading">
+        <template v-if="pending">
           <div class="columns is-multiline">
             <category-summary-skeleton
               v-for="index in 4"
@@ -48,41 +50,42 @@
 </template>
 
 <script>
-import NewCategoryForm from '@/components/manage/categories/NewCategoryForm'
+import CategoryForm from '@/components/manage/CategoryForm'
 import CategorySummary from '@/components/manage/categories/CategorySummary'
 import CategorySummarySkeleton from '@/components/manage/categories/CategorySummarySkeleton'
-import { loadingMixin } from '@/mixin/loadingMixin'
+import apiOperationMixin from '@/mixin/apiOperationMixin'
+
+const mixinData = {
+  operationName: 'getCategories',
+  shouldRetry: true,
+  consoleErrorMessage: 'Could not get categories',
+  toastErrorMessage: 'Could not display categories…'
+}
 
 export default {
   name: 'Categories',
-  components: { CategorySummarySkeleton, NewCategoryForm, CategorySummary },
-  mixins: [loadingMixin],
+  components: { CategorySummarySkeleton, CategoryForm, CategorySummary },
+  mixins: [apiOperationMixin],
   data: function () {
     return {
-      operationName: 'getCategories',
-      shouldRetry: true,
-      consoleErrorMessage: 'Could not get categories',
-      toastErrorMessage: 'Could not display categories',
-      isNewCategoryModalVisible: false
+      categorySummaries: [],
+      isNewCategoryModalVisible: false,
+      ...mixinData
     }
   },
   computed: {
-    categorySummaries () {
-      if (this.externalData === undefined) {
-        return []
-      }
-      return [...this.externalData]
-        .map(category => ({
-          ...category,
-          quantity: NaN
-        }))
-    },
     sortedSummaries () {
       return [...this.categorySummaries]
         .sort((one, other) => one.name.localeCompare(other.name))
     }
   },
   methods: {
+    handleOperationSucceeded (categories) {
+      this.categorySummaries = categories.map(category => ({
+        ...category,
+        quantity: NaN
+      }))
+    },
     handleCategoryAdded (category) {
       this.categorySummaries.push({
         ...category,
@@ -91,7 +94,7 @@ export default {
     }
   },
   mounted () {
-    this.loadData()
+    this.performOperation()
   }
 }
 </script>
