@@ -2,28 +2,46 @@
   <form @submit.prevent="handleSubmit">
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">New category</p>
+        <p class="modal-card-title">{{mode === 'add' ? 'New' : 'Edit'}} category</p>
       </header>
       <section class="modal-card-body">
-        <b-field label="Name">
+        <b-field
+          label="Name"
+          :type="{
+            'is-success': dirty && isValid,
+            'is-danger': dirty && !isValid
+          }"
+          :message="dirty ? validationErrors : []">
           <b-input
             placeholder="Unique name category"
             required
             type="text"
             v-model="name"
-            validation-message="Name cannot be empty">
+            @input="dirty = true">
           </b-input>
         </b-field>
       </section>
       <footer class="modal-card-foot">
-        <b-button native-type="submit" type="is-primary" :disabled="!nameChanged">{{mode === 'add' ? 'Add' : 'Update'}} category</b-button>
-        <b-button @click="$parent.close()">Cancel</b-button>
+        <b-button
+          native-type="submit"
+          type="is-primary"
+          :disabled="!isValid || pending"
+          :loading="pending"
+        >
+          {{mode === 'add' ? 'Add' : 'Update'}} category
+        </b-button>
+        <b-button
+          @click="$parent.close()"
+        >
+          Cancel
+        </b-button>
       </footer>
     </div>
   </form>
 </template>
 
 <script>
+import { Category } from '@/api/model'
 import apiOperationMixin from '@/mixin/apiOperationMixin'
 
 const mixinData = {
@@ -59,25 +77,36 @@ export default {
       type: Number,
       default: 0
     },
-    categoryOriginalName: {
-      type: String
+    categories: {
+      type: Array,
+      required: true
     }
   },
   data: function () {
     return {
-      name: this.categoryOriginalName,
+      dirty: false,
+      name: this.initialName,
       ...mixinData[this.mode]()
     }
   },
   computed: {
-    nameChanged () {
-      return this.name !== this.categoryOriginalName
+    initialName () {
+      const category = this.categories.find(category => category.categoryId === this.categoryId)
+      return category !== undefined
+        ? category.name
+        : undefined
+    },
+    category () {
+      return new Category(this.categoryId, this.name)
+    },
+    validationErrors () {
+      return this.category.validate(this.categories)
+    },
+    isValid () {
+      return this.validationErrors.length === 0
     },
     operationData () {
-      return {
-        id: this.categoryId,
-        name: this.name
-      }
+      return this.category.toData()
     }
   },
   methods: {
@@ -85,7 +114,7 @@ export default {
       this.performOperation()
     },
     handleOperationSucceeded (category) {
-      this.$emit('data-changed', category)
+      this.$emit('category-changed', category)
       this.$parent.close()
     }
   }

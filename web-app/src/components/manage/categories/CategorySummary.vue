@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { CategoryDTO } from '../../../api/model'
+import { CategoryIdDTO } from '../../../api/model'
 
 export default {
   name: 'CategorySummary',
@@ -52,8 +52,8 @@ export default {
   },
   methods: {
     goToCategoryView () {
-      const categoryDTO = new CategoryDTO(this.id)
-      this.$router.push({ name: 'Category', params: categoryDTO.toParameters() },
+      const categoryIdDTO = new CategoryIdDTO(this.id)
+      this.$router.push({ name: 'Category', params: categoryIdDTO.toParameters() },
         () => {},
         error => {
           this.$buefy.toast.open({

@@ -14,19 +14,12 @@
               @category-deleted="handleCategoryDeleted" />
           </div>
           <div class="level-item">
-            <b-button type="is-primary" outlined @click="isCategoryModalVisible = true">Edit</b-button>
-            <b-modal
-              :active.sync="isCategoryModalVisible"
-              has-modal-card
-              trap-focus
-              destroy-on-hide
-            >
-              <category-form
-                :category-id="id"
-                :category-original-name="name"
-                mode="edit"
-                @data-changed="handleCategoryUpdated"/>
-            </b-modal>
+            <change-category-button
+              mode="edit"
+              outlined
+              :category-id="id"
+              :categories="categories"
+              :handle-category-changed="handleCategoryUpdated" />
           </div>
           <div class="level-item">
             <b-button type="is-primary">Add question</b-button>
@@ -41,14 +34,14 @@
 
 <script>
 import DeleteCategoryButton from '@/components/manage/category/DeleteCategoryButton'
-import CategoryForm from '@/components/manage/CategoryForm'
+import ChangeCategoryButton from '@/components/manage/ChangeCategoryButton'
 import QuestionsTable from '@/components/manage/category/CategoryQuestionsTable'
 import client from '@/api'
-import { CategoryDTO } from '@/api/model'
+import { CategoryIdDTO } from '@/api/model'
 
 export default {
   name: 'Category',
-  components: { DeleteCategoryButton, CategoryForm, QuestionsTable },
+  components: { ChangeCategoryButton, DeleteCategoryButton, QuestionsTable },
   props: {
     id: {
       type: Number,
@@ -57,7 +50,6 @@ export default {
   },
   data () {
     return {
-      isCategoryModalVisible: false,
       categories: []
     }
   },
@@ -85,7 +77,7 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    const categoryDTO = CategoryDTO.parseParameters(to.params)
+    const categoryDTO = CategoryIdDTO.parseParameters(to.params)
     client.getCategories()
       .then(response => {
         const categories = response.data

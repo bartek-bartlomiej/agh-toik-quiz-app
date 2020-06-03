@@ -9,17 +9,11 @@
         </div>
         <div class="level-right">
           <div class="level-item">
-            <b-button type="is-primary" @click="isNewCategoryModalVisible = true">New category</b-button>
-            <b-modal
-              :active.sync="isNewCategoryModalVisible"
-              has-modal-card
-              trap-focus
-              destroy-on-hide
-            >
-              <category-form
-                mode="add"
-                @data-changed="handleCategoryAdded"/>
-            </b-modal>
+            <change-category-button
+              mode="add"
+              :categories="categories"
+              :handle-category-changed="handleCategoryAdded"
+            />
           </div>
         </div>
       </nav>
@@ -50,7 +44,7 @@
 </template>
 
 <script>
-import CategoryForm from '@/components/manage/CategoryForm'
+import ChangeCategoryButton from '../../components/manage/ChangeCategoryButton'
 import CategorySummary from '@/components/manage/categories/CategorySummary'
 import CategorySummarySkeleton from '@/components/manage/categories/CategorySummarySkeleton'
 import apiOperationMixin from '@/mixin/apiOperationMixin'
@@ -64,16 +58,22 @@ const mixinData = {
 
 export default {
   name: 'Categories',
-  components: { CategorySummarySkeleton, CategoryForm, CategorySummary },
+  components: { ChangeCategoryButton, CategorySummarySkeleton, CategorySummary },
   mixins: [apiOperationMixin],
   data: function () {
     return {
-      categorySummaries: [],
+      categories: [],
       isNewCategoryModalVisible: false,
       ...mixinData
     }
   },
   computed: {
+    categorySummaries () {
+      return this.categories.map(category => ({
+        ...category,
+        quantity: NaN
+      }))
+    },
     sortedSummaries () {
       return [...this.categorySummaries]
         .sort((one, other) => one.name.localeCompare(other.name))
@@ -81,16 +81,10 @@ export default {
   },
   methods: {
     handleOperationSucceeded (categories) {
-      this.categorySummaries = categories.map(category => ({
-        ...category,
-        quantity: NaN
-      }))
+      this.categories = categories
     },
     handleCategoryAdded (category) {
-      this.categorySummaries.push({
-        ...category,
-        quantity: 0
-      })
+      this.categories.push(category)
     }
   },
   mounted () {

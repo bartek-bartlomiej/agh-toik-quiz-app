@@ -1,5 +1,42 @@
 const Difficulty = new Map([...new Set(['easy', 'medium', 'hard']).entries()])
 
+class Category {
+  constructor (id, name) {
+    this.id = id
+    this.name = name
+  }
+
+  validate (categories) {
+    let errors = [
+      ...typeof this.id !== 'number' ? ['ID should be a number'] : [],
+      ...typeof this.name !== 'string' ? ['Name should be a string'] : []
+    ]
+    if (errors.length > 0) {
+      return errors
+    }
+
+    errors = [
+      ...this.id !== 0 && !categories.map(category => category.id).includes(this.id) ? ['Category with this ID not found'] : []
+    ]
+    if (errors.length > 0) {
+      return errors
+    }
+
+    errors = [
+      ...this.name === '' ? ['Name cannot be empty'] : [],
+      ...categories.map(category => category.name).includes(this.name) ? ['Category with this name already exists'] : []
+    ]
+    return errors
+  }
+
+  toData () {
+    return {
+      id: this.id,
+      name: this.name
+    }
+  }
+}
+
 class QuizQueryDTO {
   constructor (categoryId, difficulty, quantity) {
     this.category = categoryId
@@ -29,9 +66,9 @@ class QuizQueryDTO {
   }
 }
 
-class CategoryDTO {
-  constructor (categoryId) {
-    this.id = categoryId
+class CategoryIdDTO {
+  constructor (id) {
+    this.id = id
   }
 
   isValid (categories) {
@@ -47,12 +84,13 @@ class CategoryDTO {
 
   static parseParameters (params) {
     const id = Number(params.id)
-    return new CategoryDTO(id)
+    return new CategoryIdDTO(id)
   }
 }
 
 export {
   Difficulty,
+  Category,
   QuizQueryDTO,
-  CategoryDTO
+  CategoryIdDTO
 }
