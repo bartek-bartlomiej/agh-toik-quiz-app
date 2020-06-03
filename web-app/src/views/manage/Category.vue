@@ -9,7 +9,9 @@
         </div>
         <div class="level-right">
           <div class="level-item">
-            <b-button type="is-danger" outlined @click="confirmDelete">Delete</b-button>
+            <delete-category-button
+              :category-id="id"
+              @category-deleted="handleCategoryDeleted" />
           </div>
           <div class="level-item">
             <b-button type="is-primary" outlined @click="isCategoryModalVisible = true">Edit</b-button>
@@ -38,6 +40,7 @@
 </template>
 
 <script>
+import DeleteCategoryButton from '@/components/manage/category/DeleteCategoryButton'
 import CategoryForm from '@/components/manage/CategoryForm'
 import QuestionsTable from '@/components/manage/category/CategoryQuestionsTable'
 import client from '@/api'
@@ -45,7 +48,7 @@ import { CategoryDTO } from '@/api/model'
 
 export default {
   name: 'Category',
-  components: { CategoryForm, QuestionsTable },
+  components: { DeleteCategoryButton, CategoryForm, QuestionsTable },
   props: {
     id: {
       type: Number,
@@ -61,23 +64,14 @@ export default {
   computed: {
     name () {
       const category = this.categories.find(category => category.id === this.id)
-      return category !== undefined ? category.name : undefined
+      return category !== undefined
+        ? category.name
+        : undefined
     }
   },
   methods: {
     saveCategories (categories) {
       this.categories = categories
-    },
-    confirmDelete () {
-      this.$buefy.dialog.confirm({
-        title: 'Deleting category',
-        message: 'Are you sure you want to <strong>delete</strong> this category?',
-        confirmText: 'Delete category',
-        type: 'is-danger',
-        hasIcon: true,
-        iconPack: 'fa',
-        onConfirm: () => console.log('TODO delete :o)')
-      })
     },
     handleCategoryUpdated (updatedCategory) {
       this.categories = this.categories.map(category =>
@@ -85,6 +79,9 @@ export default {
           ? updatedCategory
           : category
       )
+    },
+    handleCategoryDeleted () {
+      this.$router.replace({ name: 'Categories' })
     }
   },
   beforeRouteEnter (to, from, next) {
