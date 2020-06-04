@@ -21,8 +21,8 @@
 </template>
 
 <script>
-import QuizCategoryInput from '@/components/home/NewQuizCategoryInput'
-import QuizDifficultyInput from '@/components/home/NewQuizDifficultyInput'
+import QuizCategoryInput from '@/components/CategoryInput'
+import QuizDifficultyInput from '@/components/DifficultyInput'
 import QuizQuantityInput from '@/components/home/NewQuizQuantityInput'
 import { Difficulty, QuizQueryDTO } from '@/api/model'
 

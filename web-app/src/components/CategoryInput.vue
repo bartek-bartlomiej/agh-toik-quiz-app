@@ -28,7 +28,7 @@ const mixinData = {
 }
 
 export default {
-  name: 'NewQuizCategoryInput',
+  name: 'CategoryInput',
   mixins: [apiOperationMixin],
   props: {
     value: Number

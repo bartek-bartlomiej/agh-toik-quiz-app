@@ -37,7 +37,7 @@
             </b-icon>
           </p>
           <p>Nothing here.</p>
-          <a>Add new question</a>
+          <a @click="$emit('show-modal-requested')">Add new question</a>
         </div>
       </section>
     </template>
