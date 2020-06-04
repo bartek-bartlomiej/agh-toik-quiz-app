@@ -22,20 +22,34 @@
         <b-field label="Answers">
           <div class="control">
             <b-field
+              grouped
               v-for="(_, index) in question.answers"
               :key="index"
             >
+              <div class="control">
+                <b-button
+                  :type="{'is-primary' : index === question.correctAnswer}"
+                  :icon-pack="index === question.correctAnswer ? 'fas' : 'far'"
+                  :icon-right="index === question.correctAnswer ? 'check-circle' : 'circle'"
+                  @click="question.correctAnswer = index"/>
+              </div>
               <b-input
-                placeholder="Question content"
-                required
-                :icon-pack="index === question.correctAnswer ? 'fas' : 'far'"
-                :icon-right="index === question.correctAnswer ? 'check-circle' : 'circle'"
-                @icon-right-click="question.correctAnswer = index"
-                icon-right-clickable
+                placeholder="Question answer"
+                expanded
                 v-model="question.answers[index]"
-                type="text">
-              </b-input>
+                type="text" />
+              <div class="control">
+                <b-button
+                  icon-pack="fa"
+                  icon-right="trash-alt"
+                  @click="deleteAnswer(index)" />
+              </div>
             </b-field>
+            <b-button
+              icon-pack="fa"
+              icon-right="plus"
+              @click="question.answers.push(undefined)"
+            />
           </div>
         </b-field>
       </section>
@@ -121,6 +135,12 @@ export default {
     }
   },
   methods: {
+    deleteAnswer (answerIndex) {
+      if (this.question.correctAnswer === answerIndex) {
+        this.question.correctAnswer = undefined
+      }
+      this.question.answers = this.question.answers.filter((_, index) => index !== answerIndex)
+    },
     handleSubmit () {
       console.log('todo')
     }
