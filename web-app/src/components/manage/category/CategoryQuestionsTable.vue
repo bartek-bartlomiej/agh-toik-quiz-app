@@ -18,9 +18,12 @@
       </b-table-column>
 
       <b-table-column field="difficulty" label="Difficulty" width="32%" centered>
-              <span :class="['tag', difficultyColor(props.row.difficulty)]">
-                  {{ capitalize(props.row.difficulty) }}
-              </span>
+        <span
+          class="is-capitalized"
+          :class="['tag', difficultyColor(props.row.difficulty)]"
+        >
+            {{ props.row.difficulty }}
+        </span>
       </b-table-column>
     </template>
     <template slot="empty">
@@ -79,11 +82,11 @@ export default {
       }
     },
     questionSummaries () {
-      return this.questions.map((question, index) => ({
+      return this.questions.map(({ answers, body, correctAnswer, difficulty }, index) => ({
         no: index + 1,
-        difficulty: question.difficulty,
-        question: question.body,
-        answer: question.answers[question.correctAnswer]
+        difficulty: difficulty,
+        question: body,
+        answer: answers[correctAnswer]
       }))
     }
   },
@@ -93,9 +96,6 @@ export default {
     },
     difficultyColor (difficulty) {
       return colors[difficulty]
-    },
-    capitalize ([initial, ...rest]) {
-      return [initial.toUpperCase(), ...rest].join('')
     }
   },
   created () {
