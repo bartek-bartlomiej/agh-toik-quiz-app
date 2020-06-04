@@ -16,7 +16,7 @@
             placeholder="Unique name category"
             required
             type="text"
-            v-model="name"
+            v-model="category.name"
             @input="dirty = true">
           </b-input>
         </b-field>
@@ -83,22 +83,15 @@ export default {
     }
   },
   data: function () {
+    const category = this.categories.find(category => category.id === this.categoryId)
+    const initialName = category !== undefined ? category.name : undefined
     return {
       dirty: false,
-      name: this.initialName,
+      category: new Category(this.categoryId, initialName),
       ...mixinData[this.mode]()
     }
   },
   computed: {
-    initialName () {
-      const category = this.categories.find(category => category.categoryId === this.categoryId)
-      return category !== undefined
-        ? category.name
-        : undefined
-    },
-    category () {
-      return new Category(this.categoryId, this.name)
-    },
     validationErrors () {
       return this.category.validate(this.categories)
     },
