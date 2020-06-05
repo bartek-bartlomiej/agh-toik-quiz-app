@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import AnswerButton from './QuizQuestionAnswerButton'
+import AnswerButton from '@/components/quiz/QuizQuestionAnswerButton'
 
 export default {
   name: 'Question',
@@ -56,7 +56,7 @@ export default {
     }
   },
   watch: {
-    'questionData.ordinal' () {
+    ordinal () {
       this.answered = false
       this.chosenAnswer = undefined
     }

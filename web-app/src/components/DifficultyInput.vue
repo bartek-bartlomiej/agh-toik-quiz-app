@@ -17,10 +17,11 @@
 import { Difficulty } from '@/api/model'
 
 export default {
-  name: 'HomeNewQuizDifficultyInput',
+  name: 'DifficultyInput',
   props: {
     value: {
-      type: String
+      type: String,
+      default: Difficulty.get('medium')
     }
   },
   data: function () {

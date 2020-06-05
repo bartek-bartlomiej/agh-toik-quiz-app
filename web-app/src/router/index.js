@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-import AbstractView from '../views/AbstractView'
-import Quiz from '../views/Quiz'
-import { QuizQueryDTO } from '../api/model'
+import Home from '@/views/Home.vue'
+import AbstractView from '@/views/AbstractView'
+import Quiz from '@/views/Quiz'
+import Categories from '@/views/manage/Categories'
+import Category from '@/views/manage/Category'
+import { QuizQueryDTO } from '@/api/model'
 
 Vue.use(VueRouter)
 
@@ -28,6 +30,19 @@ const routes = [
           }
           next()
         }
+      },
+      {
+        path: '/categories',
+        name: 'Categories',
+        component: Categories
+      },
+      {
+        path: '/category/:id',
+        name: 'Category',
+        component: Category,
+        props: route => ({
+          id: Number(route.params.id)
+        })
       }
     ]
   }
