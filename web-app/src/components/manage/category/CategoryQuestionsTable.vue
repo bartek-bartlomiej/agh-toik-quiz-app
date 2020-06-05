@@ -39,7 +39,7 @@
             </b-icon>
           </p>
           <p>Nothing here.</p>
-          <a @click="$emit('show-modal-requested')">Add new question</a>
+          <a @click="$emit('show-add-modal-requested')">Add new question</a>
         </div>
       </section>
     </template>
@@ -121,7 +121,7 @@ export default {
           data.correctAnswer,
           data.category.id,
           data.difficulty))[0]
-      this.$emit('show-modal-requested', question)
+      this.$emit('show-edit-modal-requested', question)
     }
   },
   created () {

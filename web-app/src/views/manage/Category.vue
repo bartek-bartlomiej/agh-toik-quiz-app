@@ -35,7 +35,8 @@
       <questions-table
         :category-id="id"
         :questions.sync="questions"
-        @show-modal-requested="showQuestionEditModal"
+        @show-add-modal-requested="showQuestionAddModal"
+        @show-edit-modal-requested="showQuestionEditModal"
       />
       <b-modal
         :active.sync="categoryModalVisible"
@@ -63,6 +64,7 @@
           :categories="categories"
           @question-added="handleQuestionAdded"
           @question-changed="handleQuestionEdited"
+          @question-removed="handleQuestionRemoved"
         />
       </b-modal>
     </div>
@@ -131,6 +133,9 @@ export default {
         return
       }
       this.questions = this.questions.map(question => question.id === editedQuestion.id ? editedQuestion : question)
+    },
+    handleQuestionRemoved (removedQuestion) {
+      this.questions = this.questions.filter(question => question.id !== removedQuestion.id)
     },
     showCategoryModal () {
       this.categoryModalVisible = true

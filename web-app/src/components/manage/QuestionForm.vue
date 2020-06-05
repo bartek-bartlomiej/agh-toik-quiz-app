@@ -92,6 +92,11 @@
         >
           {{mode === 'add' ? 'Add' : 'Update'}} question
         </b-button>
+        <delete-question-button
+          v-if="mode === 'edit'"
+          :question-id="question.id"
+          @question-removed="handleQuestionRemoved"
+        />
         <b-button
           @click="$parent.close()"
         >
@@ -107,6 +112,7 @@ import apiOperationMixin from '../../mixin/apiOperationMixin'
 import DifficultyInput from '../DifficultyInput'
 import CategoryInput from '../CategoryInput'
 import { Question, Difficulty } from '../../api/model'
+import DeleteQuestionButton from './category/DeleteQuestionButton'
 
 const mixinData = {
   add: () => ({
@@ -129,7 +135,7 @@ const mixinData = {
 
 export default {
   name: 'QuestionForm',
-  components: { CategoryInput, DifficultyInput },
+  components: { DeleteQuestionButton, CategoryInput, DifficultyInput },
   mixins: [apiOperationMixin],
   props: {
     mode: {
@@ -191,6 +197,10 @@ export default {
     },
     handleOperationSucceeded (question) {
       this.$emit(this.mode === 'add' ? 'question-added' : 'question-changed', question)
+      this.$parent.close()
+    },
+    handleQuestionRemoved () {
+      this.$emit('question-removed', this.question)
       this.$parent.close()
     }
   }

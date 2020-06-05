@@ -49,7 +49,9 @@ export default {
           }
           if (this.shouldRetry) {
             setTimeout(() => this.performOperation(), this.retryTime)
+            return
           }
+          this.pending = false
         })
     },
     showToast (type) {
