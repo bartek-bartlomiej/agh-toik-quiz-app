@@ -25,7 +25,7 @@
           <div class="level-item">
             <b-button
               type="is-primary"
-              @click="showQuestionModal"
+              @click="showQuestionAddModal"
             >
               Add question
             </b-button>
@@ -35,7 +35,7 @@
       <questions-table
         :category-id="id"
         :questions.sync="questions"
-        @show-modal-requested="showQuestionModal"
+        @show-modal-requested="showQuestionEditModal"
       />
       <b-modal
         :active.sync="categoryModalVisible"
@@ -57,10 +57,12 @@
         destroy-on-hide
       >
         <question-form
-          mode="add"
+          :mode="questionFormMode"
+          :question-values="editedQuestion"
           :category-id="id"
           :categories="categories"
-          @question-changed="handleQuestionAdded"
+          @question-added="handleQuestionAdded"
+          @question-changed="handleQuestionEdited"
         />
       </b-modal>
     </div>
@@ -86,6 +88,8 @@ export default {
   },
   data () {
     return {
+      questionFormMode: 'add',
+      editedQuestion: undefined,
       questions: [],
       categories: [],
       categoryModalVisible: false,
@@ -120,11 +124,27 @@ export default {
       }
       this.questions.push(question)
     },
+    handleQuestionEdited (editedQuestion) {
+      console.log('dupa')
+      if (this.id !== editedQuestion.category.id) {
+        this.questions = this.questions.filter(question => question.id !== editedQuestion.id)
+        return
+      }
+      this.questions = this.questions.map(question => question.id === editedQuestion.id ? editedQuestion : question)
+    },
     showCategoryModal () {
       this.categoryModalVisible = true
     },
-    showQuestionModal () {
+    showQuestionModal (mode, question) {
+      this.questionFormMode = mode
+      this.editedQuestion = question
       this.questionModalVisible = true
+    },
+    showQuestionAddModal () {
+      this.showQuestionModal('add')
+    },
+    showQuestionEditModal (question) {
+      this.showQuestionModal('edit', question)
     }
   },
   beforeRouteEnter (to, from, next) {

@@ -3,28 +3,30 @@
     :data="questionSummaries"
     :loading="pending"
     striped
-    hoverable>
+    hoverable
+    :row-class="() => 'clickable'"
+    @click="handleSelectQuestion">
     <template slot-scope="props">
-      <b-table-column field="id" label="No." width="4%" centered numeric>
-        {{ props.row.no }}
-      </b-table-column>
+        <b-table-column field="id" label="No." width="4%" centered numeric>
+          {{ props.row.no }}
+        </b-table-column>
 
-      <b-table-column field="question" label="Question" width="32%">
-        {{ props.row.question }}
-      </b-table-column>
+        <b-table-column field="question" label="Question" width="32%">
+          {{ props.row.question }}
+        </b-table-column>
 
-      <b-table-column field="answer" label="Answer" width="32%">
-        {{ props.row.answer }}
-      </b-table-column>
+        <b-table-column field="answer" label="Answer" width="32%">
+          {{ props.row.answer }}
+        </b-table-column>
 
-      <b-table-column field="difficulty" label="Difficulty" width="32%" centered>
-        <span
-          class="is-capitalized"
-          :class="['tag', difficultyColor(props.row.difficulty)]"
-        >
-            {{ props.row.difficulty }}
-        </span>
-      </b-table-column>
+        <b-table-column field="difficulty" label="Difficulty" width="32%" centered>
+          <span
+            class="is-capitalized"
+            :class="['tag', difficultyColor(props.row.difficulty)]"
+          >
+              {{ props.row.difficulty }}
+          </span>
+        </b-table-column>
     </template>
     <template slot="empty">
       <section class="section">
@@ -46,6 +48,7 @@
 
 <script>
 import apiOperationMixin from '@/mixin/apiOperationMixin'
+import { Question } from '../../../api/model'
 
 const colors = {
   easy: 'is-success',
@@ -85,7 +88,8 @@ export default {
       }
     },
     questionSummaries () {
-      return this.$data.$questions.map(({ answers, body, correctAnswer, difficulty }, index) => ({
+      return this.$data.$questions.map(({ id, answers, body, correctAnswer, difficulty }, index) => ({
+        id: id,
         no: index + 1,
         difficulty: difficulty,
         question: body,
@@ -107,6 +111,17 @@ export default {
     },
     difficultyColor (difficulty) {
       return colors[difficulty]
+    },
+    handleSelectQuestion (row) {
+      const question = [this.$data.$questions.find(question => question.id === row.id)]
+        .map(data => new Question(
+          data.id,
+          data.body,
+          data.answers,
+          data.correctAnswer,
+          data.category.id,
+          data.difficulty))[0]
+      this.$emit('show-modal-requested', question)
     }
   },
   created () {

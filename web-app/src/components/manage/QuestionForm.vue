@@ -190,7 +190,7 @@ export default {
       this.performOperation()
     },
     handleOperationSucceeded (question) {
-      this.$emit('question-changed', question)
+      this.$emit(this.mode === 'add' ? 'question-added' : 'question-changed', question)
       this.$parent.close()
     }
   }
