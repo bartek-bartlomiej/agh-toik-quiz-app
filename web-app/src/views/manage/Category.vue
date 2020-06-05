@@ -34,6 +34,7 @@
       </nav>
       <questions-table
         :category-id="id"
+        :questions.sync="questions"
         @show-modal-requested="showQuestionModal"
       />
       <b-modal
@@ -85,6 +86,7 @@ export default {
   },
   data () {
     return {
+      questions: [],
       categories: [],
       categoryModalVisible: false,
       questionModalVisible: false
@@ -113,7 +115,10 @@ export default {
       this.$router.replace({ name: 'Categories' })
     },
     handleQuestionAdded (question) {
-      // todo pass to question table
+      if (this.id !== question.category.id) {
+        return
+      }
+      this.questions.push(question)
     },
     showCategoryModal () {
       this.categoryModalVisible = true

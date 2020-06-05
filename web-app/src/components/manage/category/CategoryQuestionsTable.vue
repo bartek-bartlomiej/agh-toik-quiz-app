@@ -67,11 +67,14 @@ export default {
     categoryId: {
       type: Number,
       required: true
+    },
+    questions: {
+      type: Array
     }
   },
   data: function () {
     return {
-      questions: [],
+      $questions: this.questions,
       ...mixinData
     }
   },
@@ -82,7 +85,7 @@ export default {
       }
     },
     questionSummaries () {
-      return this.questions.map(({ answers, body, correctAnswer, difficulty }, index) => ({
+      return this.$data.$questions.map(({ answers, body, correctAnswer, difficulty }, index) => ({
         no: index + 1,
         difficulty: difficulty,
         question: body,
@@ -90,9 +93,17 @@ export default {
       }))
     }
   },
+  watch: {
+    questions (newQuestions) {
+      this.$data.$questions = newQuestions
+    },
+    '$data.$questions' (newQuestions) {
+      this.$emit('update:questions', newQuestions)
+    }
+  },
   methods: {
     handleOperationSucceeded (questions) {
-      this.questions = questions
+      this.$data.$questions = questions
     },
     difficultyColor (difficulty) {
       return colors[difficulty]
