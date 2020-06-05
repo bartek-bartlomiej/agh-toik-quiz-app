@@ -5,25 +5,48 @@
         <p class="modal-card-title">{{mode === 'add' ? 'New' : 'Edit'}} question</p>
       </header>
       <section class="modal-card-body">
-        <b-field label="Category">
+        <b-field
+          label="Category"
+          :type="{
+            'is-danger': typeof validationErrors.categoryId !== 'undefined'
+          }"
+          :message="validationErrors.categoryId"
+        >
           <category-input v-model="question.category.id" />
         </b-field>
-        <b-field label="Difficulty">
+        <b-field
+          label="Difficulty"
+          :type="{
+            'is-danger': typeof validationErrors.difficulty !== 'undefined'
+          }"
+          :message="validationErrors.difficulty"
+        >
           <difficulty-input v-model="question.difficulty" />
         </b-field>
-        <b-field label="Content">
+        <b-field
+          label="Content"
+          :type="{
+            'is-danger': typeof validationErrors.body !== 'undefined'
+          }"
+          :message="validationErrors.body"
+        >
           <b-input
             placeholder="Question content"
-            required
             v-model="question.body"
             type="text">
           </b-input>
         </b-field>
-        <b-field label="Answers">
+        <b-field
+          label="Answers"
+          :type="{
+            'is-danger': typeof validationErrors.answers !== 'undefined'
+          }"
+          :message="validationErrors.answers"
+        >
           <div class="control">
             <b-field
               grouped
-              v-for="(_, index) in question.answers"
+              v-for="(_, index) of question.answers"
               :key="index"
             >
               <div class="control">
@@ -33,11 +56,19 @@
                   :icon-right="index === question.correctAnswer ? 'check-circle' : 'circle'"
                   @click="question.correctAnswer = index"/>
               </div>
-              <b-input
-                placeholder="Question answer"
+              <b-field
                 expanded
-                v-model="question.answers[index]"
-                type="text" />
+                :type="{
+                  'is-danger': typeof validationErrors[`answer-${index}`] !== 'undefined'
+                }"
+                :message="validationErrors[`answer-${index}`]"
+              >
+                <b-input
+                  placeholder="Question answer"
+
+                  v-model="question.answers[index]"
+                  type="text" />
+              </b-field>
               <div class="control">
                 <b-button
                   icon-pack="fa"
@@ -48,7 +79,7 @@
             <b-button
               icon-pack="fa"
               icon-right="plus"
-              @click="question.answers.push(undefined)"
+              @click="question.answers.push('')"
             />
           </div>
         </b-field>
@@ -76,6 +107,7 @@
 import apiOperationMixin from '../../mixin/apiOperationMixin'
 import DifficultyInput from '../DifficultyInput'
 import CategoryInput from '../CategoryInput'
+import { Question } from '../../api/model'
 
 const mixinData = {
   add: () => ({
@@ -106,32 +138,36 @@ export default {
         return ['add', 'edit'].indexOf(value) !== -1
       },
       required: true
+    },
+    categories: {
+      type: Array,
+      required: true
     }
   },
   data: function () {
     return {
-      question: {
-        answers: [
+      question: new Question(
+        0,
+        '?',
+        [
           'Ala',
           'Ola',
           'Ela',
           'Marta'
         ],
-        body: '?',
-        category: {
-          id: 11,
-          name: ''
-        },
-        correctAnswer: 0,
-        difficulty: 'medium',
-        id: 0
-      },
+        0,
+        0,
+        'elemele'
+      ),
       ...mixinData[this.mode]()
     }
   },
   computed: {
+    validationErrors () {
+      return this.question.validate(this.categories)
+    },
     isValid () {
-      return false
+      return Object.keys(this.validationErrors).length === 0
     }
   },
   methods: {

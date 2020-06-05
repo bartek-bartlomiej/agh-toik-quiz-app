@@ -1,5 +1,64 @@
 const Difficulty = new Map([...new Set(['easy', 'medium', 'hard']).entries()])
 
+class Question {
+  constructor (id, body, answers, correctAnswer, categoryId, difficulty) {
+    this.id = id
+    this.body = body
+    this.answers = [...answers]
+    this.correctAnswer = correctAnswer
+    this.category = {
+      id: categoryId
+    }
+    this.difficulty = difficulty
+  }
+
+  validate (categories) {
+    let errors = {
+      ...typeof this.id !== 'number' ? { id: 'ID should be a number' } : {},
+      ...typeof this.body !== 'string' ? { body: 'Name should be a string' } : {},
+      ...typeof this.answers !== 'object' ? { answers: 'Answers should be array of string' } : {},
+      ...!(typeof this.correctAnswer === 'number' || typeof this.correctAnswer === 'undefined')
+        ? { correctAnswer: 'Correct Answer ID should be a number' }
+        : {},
+      ...typeof this.category.id !== 'number' ? { categoryId: 'Category ID should be a number' } : {},
+      ...typeof this.difficulty !== 'string' ? { difficulty: 'Difficulty should be a string' } : {}
+    }
+    if (errors.answers === undefined) {
+      errors = {
+        ...errors,
+        ...this.answers.reduce(
+          (accumulator, answer, index) => typeof answer !== 'string'
+            ? { ...accumulator, [`answer-${index}`]: 'Answer should be a string' }
+            : accumulator,
+          {})
+      }
+    }
+    if (Object.keys(errors).length > 0) {
+      return errors
+    }
+
+    errors = {
+      ...this.body === '' ? { body: 'Name cannot be empty' } : {},
+      ...this.answers.reduce(
+        (accumulator, answer, index) => answer === ''
+          ? { ...accumulator, [`answer-${index}`]: 'Answer cannot be empty' }
+          : accumulator,
+        {}),
+      ...typeof this.correctAnswer === 'undefined'
+        ? { answers: 'Correct answer should be chosen' }
+        : !(this.correctAnswer >= 0 && this.correctAnswer < this.answers.length)
+          ? { answers: 'Correct answer should be from a range of answers' }
+          : {},
+      ...!categories.map(category => category.id).includes(this.category.id)
+        ? { categoryId: 'Category with this ID not found' } : {},
+      ...!Difficulty.has(this.difficulty)
+        ? { difficulty: `Difficulty should be one of ${Array.from(Difficulty.keys()).join(', ')}` } : {}
+    }
+
+    return errors
+  }
+}
+
 class Category {
   constructor (id, name) {
     this.id = id
@@ -90,6 +149,7 @@ class CategoryIdDTO {
 
 export {
   Difficulty,
+  Question,
   Category,
   QuizQueryDTO,
   CategoryIdDTO

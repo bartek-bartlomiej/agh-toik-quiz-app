@@ -57,6 +57,7 @@
       >
         <question-form
           mode="add"
+          :categories="categories"
           @question-changed="handleQuestionAdded"
         />
       </b-modal>
