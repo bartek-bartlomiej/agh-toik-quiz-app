@@ -57,6 +57,7 @@
       >
         <question-form
           mode="add"
+          :category-id="id"
           :categories="categories"
           @question-changed="handleQuestionAdded"
         />

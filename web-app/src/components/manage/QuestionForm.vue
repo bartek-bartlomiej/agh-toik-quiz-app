@@ -46,7 +46,7 @@
           <div class="control">
             <b-field
               grouped
-              v-for="(_, index) of question.answers"
+              v-for="index of question.answers.keys()"
               :key="index"
             >
               <div class="control">
@@ -65,7 +65,6 @@
               >
                 <b-input
                   placeholder="Question answer"
-
                   v-model="question.answers[index]"
                   type="text" />
               </b-field>
@@ -107,7 +106,7 @@
 import apiOperationMixin from '../../mixin/apiOperationMixin'
 import DifficultyInput from '../DifficultyInput'
 import CategoryInput from '../CategoryInput'
-import { Question } from '../../api/model'
+import { Question, Difficulty } from '../../api/model'
 
 const mixinData = {
   add: () => ({
@@ -139,26 +138,33 @@ export default {
       },
       required: true
     },
+    categoryId: {
+      type: Number,
+      required: true
+    },
     categories: {
       type: Array,
       required: true
+    },
+    questionValues: {
+      type: Question,
+      default () {
+        return new Question(
+          0,
+          '',
+          [],
+          undefined,
+          0,
+          Difficulty.get('medium')
+        )
+      }
     }
   },
   data: function () {
+    const question = this.questionValues
+    question.category.id = this.categoryId
     return {
-      question: new Question(
-        0,
-        '?',
-        [
-          'Ala',
-          'Ola',
-          'Ela',
-          'Marta'
-        ],
-        0,
-        0,
-        'elemele'
-      ),
+      question: question,
       ...mixinData[this.mode]()
     }
   },
@@ -168,6 +174,9 @@ export default {
     },
     isValid () {
       return Object.keys(this.validationErrors).length === 0
+    },
+    operationData () {
+      return this.question.toData()
     }
   },
   methods: {
@@ -178,7 +187,11 @@ export default {
       this.question.answers = this.question.answers.filter((_, index) => index !== answerIndex)
     },
     handleSubmit () {
-      console.log('todo')
+      this.performOperation()
+    },
+    handleOperationSucceeded (question) {
+      this.$emit('question-changed', question)
+      this.$parent.close()
     }
   }
 }
