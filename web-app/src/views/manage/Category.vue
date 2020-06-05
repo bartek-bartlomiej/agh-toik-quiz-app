@@ -127,7 +127,6 @@ export default {
       this.questions.push(question)
     },
     handleQuestionEdited (editedQuestion) {
-      console.log('dupa')
       if (this.id !== editedQuestion.category.id) {
         this.questions = this.questions.filter(question => question.id !== editedQuestion.id)
         return

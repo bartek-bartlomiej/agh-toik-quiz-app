@@ -12,8 +12,8 @@
           <div class="content">
             <p>
               <span class="title is-5">{{ name }}</span>
-              <br>
-              <span class="subtitle is-7">{{ questionsQuantity }}</span>
+<!--              <br>-->
+<!--              <span class="subtitle is-7">{{ questionsQuantity }}</span>-->
             </p>
           </div>
         </div>
